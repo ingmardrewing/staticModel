@@ -92,7 +92,7 @@ func (p *page) Description(description ...string) string {
 	if len(description) > 0 {
 		p.description = description[0]
 	}
-	return " "
+	return p.description
 }
 
 func (p *page) ImageUrl(imageUrl ...string) string {
