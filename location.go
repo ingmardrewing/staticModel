@@ -11,7 +11,7 @@ type loc struct {
 	title           string
 	thumbnailUrl    string
 	pathFromDocRoot string
-	filename        string
+	htmlfilename    string
 }
 
 func (l *loc) Domain(domain ...string) string {
@@ -28,11 +28,11 @@ func (l *loc) PathFromDocRoot(pathFromDocRoot ...string) string {
 	return l.pathFromDocRoot
 }
 
-func (l *loc) Filename(filename ...string) string {
-	if len(filename) > 0 {
-		l.filename = filename[0]
+func (l *loc) HtmlFilename(htmlfilename ...string) string {
+	if len(htmlfilename) > 0 {
+		l.htmlfilename = htmlfilename[0]
 	}
-	return l.filename
+	return l.htmlfilename
 }
 
 func (l *loc) Url(url ...string) string {
