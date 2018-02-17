@@ -6,8 +6,10 @@ type Site interface {
 	AddMarginalPage(page staticIntf.Page)
 	AddNaviPage(page staticIntf.Page)
 	AddPost(page staticIntf.Page)
+	AddPage(page staticIntf.Page)
 	NaviPages() []staticIntf.Page
 	Posts() []staticIntf.Page
+	Pages() []staticIntf.Page
 	MarginalPages() []staticIntf.Page
 }
 
@@ -22,6 +24,11 @@ type site struct {
 	marginalPages []staticIntf.Page
 	posts         []staticIntf.Page
 	naviPages     []staticIntf.Page
+	pages         []staticIntf.Page
+}
+
+func (s *site) AddPage(page staticIntf.Page) {
+	s.pages = append(s.pages, page)
 }
 
 func (s *site) AddNaviPage(page staticIntf.Page) {
@@ -34,6 +41,10 @@ func (s *site) AddMarginalPage(page staticIntf.Page) {
 
 func (s *site) AddPost(post staticIntf.Page) {
 	s.posts = append(s.posts, post)
+}
+
+func (s *site) Pages() []staticIntf.Page {
+	return s.pages
 }
 
 func (s *site) MarginalPages() []staticIntf.Page {
