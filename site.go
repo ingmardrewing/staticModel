@@ -5,12 +5,14 @@ import "github.com/ingmardrewing/staticIntf"
 type Site interface {
 	AddMarginalPage(page staticIntf.Page)
 	AddNaviPage(page staticIntf.Page)
+	AddNarrativePage(page staticIntf.Page)
 	AddPost(page staticIntf.Page)
 	AddPage(page staticIntf.Page)
 	NaviPages() []staticIntf.Page
 	Posts() []staticIntf.Page
 	Pages() []staticIntf.Page
 	MarginalPages() []staticIntf.Page
+	NarrativePages() []staticIntf.Page
 }
 
 func NewSite() Site {
@@ -18,13 +20,14 @@ func NewSite() Site {
 }
 
 type site struct {
-	rss           string
-	javascript    string
-	css           string
-	marginalPages []staticIntf.Page
-	posts         []staticIntf.Page
-	naviPages     []staticIntf.Page
-	pages         []staticIntf.Page
+	rss            string
+	javascript     string
+	css            string
+	marginalPages  []staticIntf.Page
+	posts          []staticIntf.Page
+	naviPages      []staticIntf.Page
+	pages          []staticIntf.Page
+	narrativepages []staticIntf.Page
 }
 
 func (s *site) AddPage(page staticIntf.Page) {
@@ -43,6 +46,10 @@ func (s *site) AddPost(post staticIntf.Page) {
 	s.posts = append(s.posts, post)
 }
 
+func (s *site) AddNarrativePage(npage staticIntf.Page) {
+	s.narrativepages = append(s.narrativepages, npage)
+}
+
 func (s *site) Pages() []staticIntf.Page {
 	return s.pages
 }
@@ -57,4 +64,8 @@ func (s *site) Posts() []staticIntf.Page {
 
 func (s *site) NaviPages() []staticIntf.Page {
 	return s.naviPages
+}
+
+func (s *site) NarrativePages() []staticIntf.Page {
+	return s.narrativepages
 }
