@@ -3,7 +3,6 @@ package staticModel
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
-	"github.com/ingmardrewing/staticPersistence"
 )
 
 type postPage struct {
@@ -19,40 +18,23 @@ type marginalPage struct {
 }
 
 // NewMarginalPage
-func NewMarginalPage(dto staticPersistence.DTO) staticIntf.Page {
+func NewMarginalPage() staticIntf.Page {
 	page := new(marginalPage)
 	page.doc = htmlDoc.NewHtmlDoc()
-	return fillPage(page, dto)
+	return page
 }
 
 // NewPostPage
-func NewPostPage(dto staticPersistence.DTO) staticIntf.Page {
+func NewPostPage() staticIntf.Page {
 	page := new(postPage)
 	page.doc = htmlDoc.NewHtmlDoc()
-	return fillPage(page, dto)
+	return page
 }
 
 // NewNaviPage
-func NewNaviPage(dto staticPersistence.DTO) staticIntf.Page {
+func NewNaviPage() staticIntf.Page {
 	page := new(naviPage)
 	page.doc = htmlDoc.NewHtmlDoc()
-	return fillPage(page, dto)
-}
-
-// NewPage
-func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
-	page.Domain(dto.Domain())
-	page.Title(dto.Title())
-	page.ThumbnailUrl(dto.ThumbUrl())
-	page.Id(dto.Id())
-	page.Description(dto.Description())
-	page.Content(dto.Content())
-	page.ImageUrl(dto.ImageUrl())
-	page.PublishedTime(dto.CreateDate())
-	page.DisqusId(dto.DisqusId())
-
-	page.Filename(dto.Filename())
-	page.PathFromDocRoot(dto.PathFromDocRoot())
 	return page
 }
 
