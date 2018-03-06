@@ -14,6 +14,13 @@ type marginalPage struct {
 }
 
 // NewMarginalPage
+func NewPage() staticIntf.Page {
+	page := new(page)
+	page.doc = htmlDoc.NewHtmlDoc()
+	return page
+}
+
+// NewMarginalPage
 func NewMarginalPage() staticIntf.Page {
 	page := new(marginalPage)
 	page.doc = htmlDoc.NewHtmlDoc()
