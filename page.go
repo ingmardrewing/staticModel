@@ -1,8 +1,11 @@
 package staticModel
 
 import (
+	"path"
+
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticPersistence"
 )
 
 type postPage struct {
@@ -13,29 +16,55 @@ type marginalPage struct {
 	page
 }
 
-// NewMarginalPage
-func NewPage() staticIntf.Page {
-	page := new(page)
-	page.doc = htmlDoc.NewHtmlDoc()
+func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
+	page.Domain(dto.Domain())
+	page.Title(dto.Title())
+	page.ThumbnailUrl(dto.ThumbUrl())
+	page.Id(dto.Id())
+	page.Description(dto.Description())
+	page.Content(dto.Content())
+	page.ImageUrl(dto.ImageUrl())
+	page.PublishedTime(dto.CreateDate())
+	page.DisqusId(dto.DisqusId())
+	page.HtmlFilename(dto.HtmlFilename())
+	page.PathFromDocRoot(dto.PathFromDocRoot())
+	page.Url(path.Join(page.PathFromDocRoot(), page.HtmlFilename()))
 	return page
 }
 
 // NewMarginalPage
-func NewMarginalPage() staticIntf.Page {
+func NewPage(dto staticPersistence.DTO) staticIntf.Page {
+	page := new(page)
+	page.doc = htmlDoc.NewHtmlDoc()
+	fillPage(page, dto)
+	return page
+}
+
+// NewMarginalPage
+func NewMarginalPage(dto staticPersistence.DTO) staticIntf.Page {
 	page := new(marginalPage)
 	page.doc = htmlDoc.NewHtmlDoc()
+	fillPage(page, dto)
 	return page
 }
 
 // NewPostPage
-func NewPostPage() staticIntf.Page {
+func NewPostPage(dto staticPersistence.DTO) staticIntf.Page {
 	page := new(postPage)
 	page.doc = htmlDoc.NewHtmlDoc()
+	fillPage(page, dto)
 	return page
 }
 
 // NewNaviPage
-func NewNaviPage() staticIntf.NaviPage {
+func NewNaviPage(dto staticPersistence.DTO) staticIntf.NaviPage {
+	page := new(naviPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	fillPage(page, dto)
+	return page
+}
+
+func NewEmptyNaviPage() staticIntf.NaviPage {
 	page := new(naviPage)
 	page.doc = htmlDoc.NewHtmlDoc()
 	return page
