@@ -1,6 +1,7 @@
 package staticModel
 
 import (
+	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
 )
@@ -22,7 +23,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	site.disqusId = config.Context.DisqusShortname
 	site.targetDir = config.Deploy.TargetDir
 
-	if len(config.Src.PostsDir) > 0 {
+	if dirExists(config.Src.PostsDir) {
 		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
 		for _, dto := range dtos {
 			p := NewPostPage(dto)
@@ -30,7 +31,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
-	if len(config.Src.MainPages) > 0 {
+	if dirExists(config.Src.MainPages) {
 		dtos := staticPersistence.ReadPages(config.Src.MainPages)
 		for _, dto := range dtos {
 			p := NewPage(dto)
@@ -38,7 +39,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
-	if len(config.Src.MarginalDir) > 0 {
+	if dirExists(config.Src.MarginalDir) {
 		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
 		for _, dto := range dtos {
 			p := NewMarginalPage(dto)
@@ -46,7 +47,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
-	if len(config.Src.Narrative) > 0 {
+	if dirExists(config.Src.Narrative) {
 		dtos := staticPersistence.ReadNarrativePages(config.Src.Narrative)
 		for _, dto := range dtos {
 			p := NewPage(dto)
@@ -67,6 +68,14 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	return site
+}
+
+func dirExists(path string) bool {
+	exits, err := fs.PathExists(path)
+	if err != nil {
+		return false
+	}
+	return len(path) > 0 && exits
 }
 
 type siteDto struct {
