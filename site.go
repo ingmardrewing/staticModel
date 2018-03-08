@@ -8,8 +8,19 @@ import (
 func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 
 	site := new(siteDto)
-	ctxDao := staticPersistence.NewContextDao(config)
-	site.contextDto = ctxDao.Dto()
+
+	site.twitterHandle = config.Context.TwitterHandle
+	site.topic = config.Context.Topic
+	site.tags = config.Context.Tags
+	site.site = config.Domain
+	site.cardType = config.Context.CardType
+	site.section = config.Context.Section
+	site.fbPage = config.Context.FbPage
+	site.twitterPage = config.Context.TwitterPage
+	site.rss = config.Deploy.Rss
+	site.css = config.Deploy.CssFileName
+	site.disqusId = config.Context.DisqusShortname
+	site.targetDir = config.Deploy.TargetDir
 
 	if len(config.Src.PostsDir) > 0 {
 		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
@@ -28,7 +39,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	if len(config.Src.MarginalDir) > 0 {
-		dtos := staticPersistence.ReadMarginals(config.Src.MainPages)
+		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
 		for _, dto := range dtos {
 			p := NewMarginalPage(dto)
 			site.addMarginalPage(p)
@@ -60,11 +71,24 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 
 type siteDto struct {
 	main, marginal []staticIntf.Location
-	contextDto     staticIntf.ContextDto
 	posts          []staticIntf.Page
 	mainPages      []staticIntf.Page
 	marginalPages  []staticIntf.Page
 	narrativePages []staticIntf.Page
+
+	twitterHandle string
+	topic         string
+	tags          string
+	site          string
+	cardType      string
+	section       string
+	fbPage        string
+	twitterPage   string
+	rss           string
+	css           string
+	domain        string
+	disqusId      string
+	targetDir     string
 }
 
 func (c *siteDto) Posts() []staticIntf.Page {
@@ -99,10 +123,6 @@ func (c *siteDto) addNarrativePage(p staticIntf.Page) {
 	c.narrativePages = append(c.narrativePages, p)
 }
 
-func (c *siteDto) ContextDto() staticIntf.ContextDto {
-	return c.contextDto
-}
-
 func (c *siteDto) AddMain(loc staticIntf.Location) {
 	c.add(&c.main, loc)
 }
@@ -124,3 +144,28 @@ func (c *siteDto) add(collection *[]staticIntf.Location, locs ...staticIntf.Loca
 		*collection = append(*collection, l)
 	}
 }
+func (s *siteDto) TwitterHandle() string { return s.twitterHandle }
+
+func (s *siteDto) Topic() string { return s.topic }
+
+func (s *siteDto) Tags() string { return s.tags }
+
+func (s *siteDto) Site() string { return s.site }
+
+func (s *siteDto) CardType() string { return s.cardType }
+
+func (s *siteDto) Section() string { return s.section }
+
+func (s *siteDto) FBPage() string { return s.fbPage }
+
+func (s *siteDto) TwitterPage() string { return s.twitterPage }
+
+func (s *siteDto) Rss() string { return s.rss }
+
+func (s *siteDto) Css() string { return s.css }
+
+func (s *siteDto) Domain() string { return s.domain }
+
+func (s *siteDto) DisqusId() string { return s.disqusId }
+
+func (s *siteDto) TargetDir() string { return s.targetDir }
