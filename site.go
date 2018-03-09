@@ -13,7 +13,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	site.twitterHandle = config.Context.TwitterHandle
 	site.topic = config.Context.Topic
 	site.tags = config.Context.Tags
-	site.site = config.Domain
+	site.domain = config.Domain
 	site.cardType = config.Context.CardType
 	site.section = config.Context.Section
 	site.fbPage = config.Context.FbPage
@@ -26,7 +26,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	if dirExists(config.Src.PostsDir) {
 		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
 		for _, dto := range dtos {
-			p := NewPostPage(dto)
+			p := NewPostPage(dto, config.Domain)
 			site.addPost(p)
 		}
 	}
@@ -34,7 +34,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	if dirExists(config.Src.MainPages) {
 		dtos := staticPersistence.ReadPages(config.Src.MainPages)
 		for _, dto := range dtos {
-			p := NewPage(dto)
+			p := NewPage(dto, config.Domain)
 			site.addMainPage(p)
 		}
 	}
@@ -42,7 +42,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	if dirExists(config.Src.MarginalDir) {
 		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
 		for _, dto := range dtos {
-			p := NewMarginalPage(dto)
+			p := NewMarginalPage(dto, config.Domain)
 			site.addMarginalPage(p)
 		}
 	}
@@ -50,20 +50,20 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	if dirExists(config.Src.Narrative) {
 		dtos := staticPersistence.ReadNarrativePages(config.Src.Narrative)
 		for _, dto := range dtos {
-			p := NewPage(dto)
+			p := NewPage(dto, config.Domain)
 			site.addNarrativePage(p)
 		}
 	}
 
 	// add configured main navigation
 	for _, fl := range config.Context.Header {
-		l := NewLocation(fl.Link, "", fl.Label, "", "", "")
+		l := NewLocation(fl.Link, config.Domain, fl.Label, "", fl.Path, fl.FileName)
 		site.AddMain(l)
 	}
 
 	// add configured marginal navigation
 	for _, fl := range config.Context.Footer {
-		l := NewLocation(fl.Link, "", fl.Label, "", "", "")
+		l := NewLocation(fl.Link, config.Domain, fl.Label, "", fl.Path, fl.FileName)
 		site.AddMarginal(l)
 	}
 
@@ -88,7 +88,6 @@ type siteDto struct {
 	twitterHandle string
 	topic         string
 	tags          string
-	site          string
 	cardType      string
 	section       string
 	fbPage        string
@@ -159,7 +158,7 @@ func (s *siteDto) Topic() string { return s.topic }
 
 func (s *siteDto) Tags() string { return s.tags }
 
-func (s *siteDto) Site() string { return s.site }
+func (s *siteDto) Site() string { return s.domain }
 
 func (s *siteDto) CardType() string { return s.cardType }
 

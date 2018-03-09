@@ -1,8 +1,10 @@
 package staticModel
 
+import "path"
+
 // Creates a new Loc, implementing Location Interface
-func NewLocation(url, prodDomain, title, thumbnailUrl, fsPath, fsFilename string) *loc {
-	return &loc{url, prodDomain, title, thumbnailUrl, fsPath, fsFilename}
+func NewLocation(url, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename string) *loc {
+	return &loc{url, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename}
 }
 
 type loc struct {
@@ -35,11 +37,9 @@ func (l *loc) HtmlFilename(htmlfilename ...string) string {
 	return l.htmlfilename
 }
 
-func (l *loc) Url(url ...string) string {
-	if len(url) > 0 {
-		l.url = url[0]
-	}
-	return l.url
+func (l *loc) Url() string {
+	p := path.Join(l.domain, l.pathFromDocRoot, l.htmlfilename)
+	return "https://" + p
 }
 
 func (l *loc) Title(title ...string) string {

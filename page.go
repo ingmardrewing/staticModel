@@ -1,12 +1,53 @@
 package staticModel
 
 import (
-	"path"
-
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
 )
+
+// NewMarginalPage
+func NewPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(page)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+// NewMarginalPage
+func NewMarginalPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(marginalPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+// NewPostPage
+func NewPostPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(postPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+// NewNaviPage
+func NewNaviPage(dto staticPersistence.DTO, domain string) staticIntf.NaviPage {
+	page := new(naviPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+func NewEmptyNaviPage(domain string) staticIntf.NaviPage {
+	page := new(naviPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	return page
+}
 
 type postPage struct {
 	page
@@ -17,7 +58,6 @@ type marginalPage struct {
 }
 
 func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
-	page.Domain(dto.Domain())
 	page.Title(dto.Title())
 	page.ThumbnailUrl(dto.ThumbUrl())
 	page.Id(dto.Id())
@@ -26,47 +66,9 @@ func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
 	page.ImageUrl(dto.ImageUrl())
 	page.PublishedTime(dto.CreateDate())
 	page.DisqusId(dto.DisqusId())
+
 	page.HtmlFilename(dto.HtmlFilename())
 	page.PathFromDocRoot(dto.PathFromDocRoot())
-	page.Url(path.Join(page.PathFromDocRoot(), page.HtmlFilename()))
-	return page
-}
-
-// NewMarginalPage
-func NewPage(dto staticPersistence.DTO) staticIntf.Page {
-	page := new(page)
-	page.doc = htmlDoc.NewHtmlDoc()
-	fillPage(page, dto)
-	return page
-}
-
-// NewMarginalPage
-func NewMarginalPage(dto staticPersistence.DTO) staticIntf.Page {
-	page := new(marginalPage)
-	page.doc = htmlDoc.NewHtmlDoc()
-	fillPage(page, dto)
-	return page
-}
-
-// NewPostPage
-func NewPostPage(dto staticPersistence.DTO) staticIntf.Page {
-	page := new(postPage)
-	page.doc = htmlDoc.NewHtmlDoc()
-	fillPage(page, dto)
-	return page
-}
-
-// NewNaviPage
-func NewNaviPage(dto staticPersistence.DTO) staticIntf.NaviPage {
-	page := new(naviPage)
-	page.doc = htmlDoc.NewHtmlDoc()
-	fillPage(page, dto)
-	return page
-}
-
-func NewEmptyNaviPage() staticIntf.NaviPage {
-	page := new(naviPage)
-	page.doc = htmlDoc.NewHtmlDoc()
 	return page
 }
 
