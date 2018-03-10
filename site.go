@@ -1,71 +1,193 @@
 package staticModel
 
-import "github.com/ingmardrewing/staticIntf"
+import (
+	"github.com/ingmardrewing/fs"
+	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticPersistence"
+)
 
-type Site interface {
-	AddMarginalPage(page staticIntf.Page)
-	AddNaviPage(page staticIntf.Page)
-	AddNarrativePage(page staticIntf.Page)
-	AddPost(page staticIntf.Page)
-	AddPage(page staticIntf.Page)
-	NaviPages() []staticIntf.Page
-	Posts() []staticIntf.Page
-	Pages() []staticIntf.Page
-	MarginalPages() []staticIntf.Page
-	NarrativePages() []staticIntf.Page
+// Creates a site dto and the  pages
+// and links being parts of the site in turn
+func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
+
+	site := new(siteDto)
+
+	site.twitterHandle = config.Context.TwitterHandle
+	site.topic = config.Context.Topic
+	site.tags = config.Context.Tags
+	site.domain = config.Domain
+	site.cardType = config.Context.CardType
+	site.section = config.Context.Section
+	site.fbPage = config.Context.FbPage
+	site.twitterPage = config.Context.TwitterPage
+	site.rss = config.Deploy.Rss
+	site.css = config.Deploy.CssFileName
+	site.disqusId = config.Context.DisqusShortname
+	site.targetDir = config.Deploy.TargetDir
+
+	if dirExists(config.Src.PostsDir) {
+		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
+		for _, dto := range dtos {
+			p := NewPostPage(dto, config.Domain)
+			site.addPost(p)
+		}
+	}
+
+	if dirExists(config.Src.MainPages) {
+		dtos := staticPersistence.ReadPages(config.Src.MainPages)
+		for _, dto := range dtos {
+			p := NewPage(dto, config.Domain)
+			site.addMainPage(p)
+		}
+	}
+
+	if dirExists(config.Src.MarginalDir) {
+		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
+		for _, dto := range dtos {
+			p := NewMarginalPage(dto, config.Domain)
+			site.addMarginalPage(p)
+		}
+	}
+
+	if dirExists(config.Src.Narrative) {
+		dtos := staticPersistence.ReadNarrativePages(config.Src.Narrative)
+		for _, dto := range dtos {
+			p := NewPage(dto, config.Domain)
+			site.addNarrativePage(p)
+		}
+	}
+
+	// add configured main navigation
+	for _, fl := range config.Context.Header {
+		l := NewLocation(
+			fl.ExternalLink,
+			config.Domain,
+			fl.Label,
+			"",
+			fl.Path,
+			fl.FileName)
+		site.AddMain(l)
+	}
+
+	// add configured marginal navigation
+	for _, fl := range config.Context.Footer {
+		l := NewLocation(
+			fl.ExternalLink,
+			config.Domain,
+			fl.Label,
+			"",
+			fl.Path,
+			fl.FileName)
+		site.AddMarginal(l)
+	}
+
+	return site
 }
 
-func NewSite() Site {
-	return new(site)
+func dirExists(path string) bool {
+	exits, err := fs.PathExists(path)
+	if err != nil {
+		return false
+	}
+	return len(path) > 0 && exits
 }
 
-type site struct {
-	rss            string
-	javascript     string
-	css            string
-	marginalPages  []staticIntf.Page
+type siteDto struct {
+	main, marginal []staticIntf.Location
 	posts          []staticIntf.Page
-	naviPages      []staticIntf.Page
-	pages          []staticIntf.Page
-	narrativepages []staticIntf.Page
+	mainPages      []staticIntf.Page
+	marginalPages  []staticIntf.Page
+	narrativePages []staticIntf.Page
+
+	twitterHandle string
+	topic         string
+	tags          string
+	cardType      string
+	section       string
+	fbPage        string
+	twitterPage   string
+	rss           string
+	css           string
+	domain        string
+	disqusId      string
+	targetDir     string
 }
 
-func (s *site) AddPage(page staticIntf.Page) {
-	s.pages = append(s.pages, page)
+func (c *siteDto) Posts() []staticIntf.Page {
+	return c.posts
 }
 
-func (s *site) AddNaviPage(page staticIntf.Page) {
-	s.naviPages = append(s.naviPages, page)
+func (c *siteDto) Pages() []staticIntf.Page {
+	return c.mainPages
 }
 
-func (s *site) AddMarginalPage(page staticIntf.Page) {
-	s.marginalPages = append(s.marginalPages, page)
+func (c *siteDto) Marginals() []staticIntf.Page {
+	return c.marginalPages
 }
 
-func (s *site) AddPost(post staticIntf.Page) {
-	s.posts = append(s.posts, post)
+func (c *siteDto) Narratives() []staticIntf.Page {
+	return c.narrativePages
 }
 
-func (s *site) AddNarrativePage(npage staticIntf.Page) {
-	s.narrativepages = append(s.narrativepages, npage)
+func (c *siteDto) addMainPage(p staticIntf.Page) {
+	c.mainPages = append(c.mainPages, p)
 }
 
-func (s *site) Pages() []staticIntf.Page {
-	return s.pages
+func (c *siteDto) addMarginalPage(p staticIntf.Page) {
+	c.marginalPages = append(c.marginalPages, p)
 }
 
-func (s *site) MarginalPages() []staticIntf.Page {
-	return s.marginalPages
+func (c *siteDto) addPost(p staticIntf.Page) {
+	c.posts = append(c.posts, p)
 }
 
-func (s *site) Posts() []staticIntf.Page {
-	return s.posts
+func (c *siteDto) addNarrativePage(p staticIntf.Page) {
+	c.narrativePages = append(c.narrativePages, p)
 }
 
-func (s *site) NaviPages() []staticIntf.Page {
-	return s.naviPages
+func (c *siteDto) AddMain(loc staticIntf.Location) {
+	c.add(&c.main, loc)
 }
 
-func (s *site) NarrativePages() []staticIntf.Page {
-	return s.narrativepages
+func (c *siteDto) Main() []staticIntf.Location {
+	return c.main
 }
+
+func (c *siteDto) AddMarginal(loc staticIntf.Location) {
+	c.add(&c.marginal, loc)
+}
+
+func (c *siteDto) Marginal() []staticIntf.Location {
+	return c.marginal
+}
+
+func (c *siteDto) add(collection *[]staticIntf.Location, locs ...staticIntf.Location) {
+	for _, l := range locs {
+		*collection = append(*collection, l)
+	}
+}
+func (s *siteDto) TwitterHandle() string { return s.twitterHandle }
+
+func (s *siteDto) Topic() string { return s.topic }
+
+func (s *siteDto) Tags() string { return s.tags }
+
+func (s *siteDto) Site() string { return s.domain }
+
+func (s *siteDto) CardType() string { return s.cardType }
+
+func (s *siteDto) Section() string { return s.section }
+
+func (s *siteDto) FBPage() string { return s.fbPage }
+
+func (s *siteDto) TwitterPage() string { return s.twitterPage }
+
+func (s *siteDto) Rss() string { return s.rss }
+
+func (s *siteDto) Css() string { return s.css }
+
+func (s *siteDto) Domain() string { return s.domain }
+
+func (s *siteDto) DisqusId() string { return s.disqusId }
+
+func (s *siteDto) TargetDir() string { return s.targetDir }

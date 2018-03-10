@@ -3,13 +3,53 @@ package staticModel
 import (
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticPersistence"
 )
 
-type postPage struct {
-	page
+// NewMarginalPage
+func NewPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(page)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
 }
 
-type naviPage struct {
+// NewMarginalPage
+func NewMarginalPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(marginalPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+// NewPostPage
+func NewPostPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(postPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+// NewNaviPage
+func NewNaviPage(dto staticPersistence.DTO, domain string) staticIntf.NaviPage {
+	page := new(naviPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	fillPage(page, dto)
+	return page
+}
+
+func NewEmptyNaviPage(domain string) staticIntf.NaviPage {
+	page := new(naviPage)
+	page.doc = htmlDoc.NewHtmlDoc()
+	page.domain = domain
+	return page
+}
+
+type postPage struct {
 	page
 }
 
@@ -17,29 +57,50 @@ type marginalPage struct {
 	page
 }
 
-// NewMarginalPage
-func NewMarginalPage() staticIntf.Page {
-	page := new(marginalPage)
-	page.doc = htmlDoc.NewHtmlDoc()
+func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
+	page.Title(dto.Title())
+	page.ThumbnailUrl(dto.ThumbUrl())
+	page.Id(dto.Id())
+	page.Description(dto.Description())
+	page.Content(dto.Content())
+	page.Category(dto.Category())
+	page.ImageUrl(dto.ImageUrl())
+	page.PublishedTime(dto.CreateDate())
+	page.DisqusId(dto.DisqusId())
+
+	page.HtmlFilename(dto.HtmlFilename())
+	page.PathFromDocRoot(dto.PathFromDocRoot())
+	page.ThumbBase64(dto.ThumbBase64())
 	return page
 }
 
-// NewPostPage
-func NewPostPage() staticIntf.Page {
-	page := new(postPage)
-	page.doc = htmlDoc.NewHtmlDoc()
-	return page
+type naviPage struct {
+	loc
+	pageContent
+	navigatedPages []staticIntf.Page
 }
 
-// NewNaviPage
-func NewNaviPage() staticIntf.Page {
-	page := new(naviPage)
-	page.doc = htmlDoc.NewHtmlDoc()
-	return page
+func (p *naviPage) AcceptVisitor(v staticIntf.Component) {
+	v.VisitPage(p)
+}
+
+func (np *naviPage) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
+	if len(navigatedPages) > 0 {
+		np.navigatedPages = navigatedPages
+	}
+	return np.navigatedPages
 }
 
 type page struct {
 	loc
+	pageContent
+}
+
+func (p *page) AcceptVisitor(v staticIntf.Component) {
+	v.VisitPage(p)
+}
+
+type pageContent struct {
 	doc           *htmlDoc.HtmlDoc
 	id            int
 	content       string
@@ -47,65 +108,77 @@ type page struct {
 	imageUrl      string
 	publishedTime string
 	disqusId      string
+	thumbBase64   string
+	category      string
 }
 
-func (p *page) Id(id ...int) int {
+func (p *pageContent) Category(category ...string) string {
+	if len(category) > 0 {
+		p.category = category[0]
+	}
+	return p.category
+}
+
+func (p *pageContent) Id(id ...int) int {
 	if len(id) > 0 {
 		p.id = id[0]
 	}
 	return p.id
 }
 
-func (p *page) DisqusId(disqusId ...string) string {
+func (p *pageContent) ThumbBase64(thumb ...string) string {
+	if len(thumb) > 0 {
+		p.thumbBase64 = thumb[0]
+	}
+	return p.thumbBase64
+}
+
+func (p *pageContent) DisqusId(disqusId ...string) string {
 	if len(disqusId) > 0 {
 		p.disqusId = disqusId[0]
 	}
 	return p.disqusId
 }
 
-func (p *page) Content(content ...string) string {
+func (p *pageContent) Content(content ...string) string {
 	if len(content) > 0 {
 		p.content = content[0]
 	}
 	return p.content
 }
 
-func (p *page) Description(description ...string) string {
+func (p *pageContent) Description(description ...string) string {
 	if len(description) > 0 {
 		p.description = description[0]
 	}
 	return p.description
 }
 
-func (p *page) ImageUrl(imageUrl ...string) string {
+func (p *pageContent) ImageUrl(imageUrl ...string) string {
 	if len(imageUrl) > 0 {
 		p.imageUrl = imageUrl[0]
 	}
 	return p.imageUrl
 }
 
-func (p *page) PublishedTime(publishedTime ...string) string {
+func (p *pageContent) PublishedTime(publishedTime ...string) string {
 	if len(publishedTime) > 0 {
 		p.publishedTime = publishedTime[0]
 	}
 	return p.publishedTime
 }
 
-func (p *page) GetDoc() *htmlDoc.HtmlDoc {
+func (p *pageContent) GetDoc() *htmlDoc.HtmlDoc {
 	return p.doc
 }
 
-func (p *page) AcceptVisitor(v staticIntf.Component) {
-	v.VisitPage(p)
-}
-
-func (p *page) AddHeaderNodes(nodes []*htmlDoc.Node) {
+func (p *pageContent) AddHeaderNodes(nodes []*htmlDoc.Node) {
 	for _, n := range nodes {
 		p.doc.AddHeadNode(n)
 	}
 }
 
-func (p *page) AddBodyNodes(nodes []*htmlDoc.Node) {
+func (p *pageContent) AddBodyNodes(nodes []*htmlDoc.Node) {
 	for _, n := range nodes {
 		p.doc.AddBodyNode(n)
 	}
