@@ -63,6 +63,7 @@ func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
 	page.Id(dto.Id())
 	page.Description(dto.Description())
 	page.Content(dto.Content())
+	page.Category(dto.Category())
 	page.ImageUrl(dto.ImageUrl())
 	page.PublishedTime(dto.CreateDate())
 	page.DisqusId(dto.DisqusId())
