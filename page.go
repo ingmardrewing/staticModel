@@ -69,6 +69,7 @@ func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
 
 	page.HtmlFilename(dto.HtmlFilename())
 	page.PathFromDocRoot(dto.PathFromDocRoot())
+	page.ThumbBase64(dto.ThumbBase64())
 	return page
 }
 
@@ -106,6 +107,15 @@ type pageContent struct {
 	imageUrl      string
 	publishedTime string
 	disqusId      string
+	thumbBase64   string
+	category      string
+}
+
+func (p *pageContent) Category(category ...string) string {
+	if len(category) > 0 {
+		p.category = category[0]
+	}
+	return p.category
 }
 
 func (p *pageContent) Id(id ...int) int {
@@ -113,6 +123,13 @@ func (p *pageContent) Id(id ...int) int {
 		p.id = id[0]
 	}
 	return p.id
+}
+
+func (p *pageContent) ThumbBase64(thumb ...string) string {
+	if len(thumb) > 0 {
+		p.thumbBase64 = thumb[0]
+	}
+	return p.thumbBase64
 }
 
 func (p *pageContent) DisqusId(disqusId ...string) string {

@@ -6,6 +6,8 @@ import (
 	"github.com/ingmardrewing/staticPersistence"
 )
 
+// Creates a site dto and the  pages
+// and links being parts of the site in turn
 func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 
 	site := new(siteDto)
@@ -57,13 +59,25 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 
 	// add configured main navigation
 	for _, fl := range config.Context.Header {
-		l := NewLocation(fl.Link, config.Domain, fl.Label, "", fl.Path, fl.FileName)
+		l := NewLocation(
+			fl.ExternalLink,
+			config.Domain,
+			fl.Label,
+			"",
+			fl.Path,
+			fl.FileName)
 		site.AddMain(l)
 	}
 
 	// add configured marginal navigation
 	for _, fl := range config.Context.Footer {
-		l := NewLocation(fl.Link, config.Domain, fl.Label, "", fl.Path, fl.FileName)
+		l := NewLocation(
+			fl.ExternalLink,
+			config.Domain,
+			fl.Label,
+			"",
+			fl.Path,
+			fl.FileName)
 		site.AddMarginal(l)
 	}
 

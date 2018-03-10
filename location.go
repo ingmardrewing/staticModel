@@ -1,19 +1,42 @@
 package staticModel
 
-import "path"
+import (
+	"path"
+	"strings"
+)
 
 // Creates a new Loc, implementing Location Interface
-func NewLocation(url, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename string) *loc {
-	return &loc{url, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename}
+func NewLocation(externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename string) *loc {
+	return &loc{externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename}
 }
 
 type loc struct {
-	url             string
+	extLink         string
 	domain          string
 	title           string
 	thumbnailUrl    string
 	pathFromDocRoot string
 	htmlfilename    string
+}
+
+func (l *loc) PathFromDocRootWithName() string {
+	p := path.Join(l.pathFromDocRoot, l.htmlfilename)
+	if !strings.HasPrefix(p, "/") {
+		p = "/" + p
+	}
+	return p
+}
+
+func (l *loc) Url() string {
+	p := path.Join(l.domain, l.PathFromDocRootWithName())
+	return "https://" + p
+}
+
+func (l *loc) ExternalLink(extLink ...string) string {
+	if len(extLink) > 0 {
+		l.extLink = extLink[0]
+	}
+	return l.extLink
 }
 
 func (l *loc) Domain(domain ...string) string {
@@ -35,11 +58,6 @@ func (l *loc) HtmlFilename(htmlfilename ...string) string {
 		l.htmlfilename = htmlfilename[0]
 	}
 	return l.htmlfilename
-}
-
-func (l *loc) Url() string {
-	p := path.Join(l.domain, l.pathFromDocRoot, l.htmlfilename)
-	return "https://" + p
 }
 
 func (l *loc) Title(title ...string) string {
