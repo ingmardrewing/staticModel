@@ -57,6 +57,15 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
+	if dirExists(config.Src.NarrativeMarginals) {
+		dtos := staticPersistence.ReadMarginals(
+			config.Src.NarrativeMarginals)
+		for _, dto := range dtos {
+			p := NewPage(dto, config.Domain)
+			site.addNarrativeMarginalPage(p)
+		}
+	}
+
 	// add configured main navigation
 	for _, fl := range config.Context.Header {
 		l := NewLocation(
@@ -93,11 +102,12 @@ func dirExists(path string) bool {
 }
 
 type siteDto struct {
-	main, marginal []staticIntf.Location
-	posts          []staticIntf.Page
-	mainPages      []staticIntf.Page
-	marginalPages  []staticIntf.Page
-	narrativePages []staticIntf.Page
+	main, marginal         []staticIntf.Location
+	posts                  []staticIntf.Page
+	mainPages              []staticIntf.Page
+	marginalPages          []staticIntf.Page
+	narrativePages         []staticIntf.Page
+	narrativeMarginalPages []staticIntf.Page
 
 	twitterHandle string
 	topic         string
@@ -129,6 +139,10 @@ func (c *siteDto) Narratives() []staticIntf.Page {
 	return c.narrativePages
 }
 
+func (c *siteDto) NarrativeMarginals() []staticIntf.Page {
+	return c.narrativeMarginalPages
+}
+
 func (c *siteDto) addMainPage(p staticIntf.Page) {
 	c.mainPages = append(c.mainPages, p)
 }
@@ -143,6 +157,10 @@ func (c *siteDto) addPost(p staticIntf.Page) {
 
 func (c *siteDto) addNarrativePage(p staticIntf.Page) {
 	c.narrativePages = append(c.narrativePages, p)
+}
+
+func (c *siteDto) addNarrativeMarginalPage(p staticIntf.Page) {
+	c.narrativeMarginalPages = append(c.narrativeMarginalPages, p)
 }
 
 func (c *siteDto) AddMain(loc staticIntf.Location) {
