@@ -1,6 +1,8 @@
 package staticModel
 
 import (
+	"path"
+
 	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
@@ -20,17 +22,24 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	site.section = config.Context.Section
 	site.fbPage = config.Context.FbPage
 	site.twitterPage = config.Context.TwitterPage
-	site.rss = config.Deploy.Rss
+	site.rssPath = config.Deploy.RssPath
+	site.rssFilename = config.Deploy.RssFilename
 	site.css = config.Deploy.CssFileName
 	site.disqusId = config.Context.DisqusShortname
 	site.targetDir = config.Deploy.TargetDir
+
+	site.description = config.DefaultMeta.BlogExcerpt
 
 	if dirExists(config.Src.PostsDir) {
 		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
 		for _, dto := range dtos {
 			p := NewPostPage(dto, config.Domain)
+			newPath := path.Join("/blog/", p.PathFromDocRoot())
+			p.PathFromDocRoot(newPath)
 			site.addPost(p)
 		}
+		bnpg := NewBlogNaviPageGenerator(site, "/blog/")
+		site.postNaviPages = bnpg.Createpages()
 	}
 
 	if dirExists(config.Src.MainPages) {
@@ -46,6 +55,11 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		for _, dto := range dtos {
 			p := NewMarginalPage(dto, config.Domain)
 			site.addMarginalPage(p)
+		}
+
+		locs := ElementsToLocations(site.Marginals())
+		for _, l := range locs {
+			site.AddMarginal(l)
 		}
 	}
 
@@ -104,10 +118,12 @@ func dirExists(path string) bool {
 type siteDto struct {
 	main, marginal         []staticIntf.Location
 	posts                  []staticIntf.Page
+	postNaviPages          []staticIntf.Page
 	mainPages              []staticIntf.Page
 	marginalPages          []staticIntf.Page
 	narrativePages         []staticIntf.Page
 	narrativeMarginalPages []staticIntf.Page
+	narrativeArchivePages  []staticIntf.Page
 
 	twitterHandle string
 	topic         string
@@ -116,15 +132,21 @@ type siteDto struct {
 	section       string
 	fbPage        string
 	twitterPage   string
-	rss           string
+	rssPath       string
+	rssFilename   string
 	css           string
 	domain        string
 	disqusId      string
 	targetDir     string
+	description   string
 }
 
 func (c *siteDto) Posts() []staticIntf.Page {
 	return c.posts
+}
+
+func (c *siteDto) PostNaviPages() []staticIntf.Page {
+	return c.postNaviPages
 }
 
 func (c *siteDto) Pages() []staticIntf.Page {
@@ -184,7 +206,10 @@ func (c *siteDto) add(collection *[]staticIntf.Location, locs ...staticIntf.Loca
 		*collection = append(*collection, l)
 	}
 }
+
 func (s *siteDto) TwitterHandle() string { return s.twitterHandle }
+
+func (s *siteDto) Description() string { return s.description }
 
 func (s *siteDto) Topic() string { return s.topic }
 
@@ -200,7 +225,9 @@ func (s *siteDto) FBPage() string { return s.fbPage }
 
 func (s *siteDto) TwitterPage() string { return s.twitterPage }
 
-func (s *siteDto) Rss() string { return s.rss }
+func (s *siteDto) RssPath() string { return s.rssPath }
+
+func (s *siteDto) RssFilename() string { return s.rssFilename }
 
 func (s *siteDto) Css() string { return s.css }
 

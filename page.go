@@ -1,6 +1,10 @@
 package staticModel
 
 import (
+	"regexp"
+	"strconv"
+	"time"
+
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
@@ -165,6 +169,26 @@ func (p *pageContent) PublishedTime(publishedTime ...string) string {
 	if len(publishedTime) > 0 {
 		p.publishedTime = publishedTime[0]
 	}
+
+	rx := regexp.MustCompile("(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{1,2}):(\\d{1,2})")
+	m := rx.FindStringSubmatch(p.publishedTime)
+	if len(m) > 1 {
+		m := rx.FindStringSubmatch(p.publishedTime)
+		conv := func(a string) int { i, _ := strconv.Atoi(a); return i }
+		loc, _ := time.LoadLocation("Europe/Berlin")
+		t := time.Date(
+			conv(m[1]),
+			time.Month(conv(m[2])),
+			conv(m[3]),
+			conv(m[4]),
+			conv(m[5]),
+			conv(m[6]),
+			0,
+			loc)
+		stamp := t.Format("Mon, 02 Jan 2006 15:04:05")
+		return stamp + " +0100"
+	}
+
 	return p.publishedTime
 }
 
