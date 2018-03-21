@@ -33,7 +33,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	if dirExists(config.Src.PostsDir) {
 		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
 		for _, dto := range dtos {
-			p := NewPostPage(dto, config.Domain)
+			p := NewPage(dto, config.Domain)
 			newPath := path.Join("/blog/", p.PathFromDocRoot())
 			p.PathFromDocRoot(newPath)
 			site.addPost(p)
@@ -53,7 +53,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	if dirExists(config.Src.MarginalDir) {
 		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
 		for _, dto := range dtos {
-			p := NewMarginalPage(dto, config.Domain)
+			p := NewPage(dto, config.Domain)
 			site.addMarginalPage(p)
 		}
 

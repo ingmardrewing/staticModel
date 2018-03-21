@@ -46,7 +46,7 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 			filename,
 			"")
 
-		np := NewNaviPage(dto, n.site.Domain())
+		np := NewPage(dto, n.site.Domain())
 		np.NavigatedPages(bundle...)
 
 		naviPages = append(naviPages, np)

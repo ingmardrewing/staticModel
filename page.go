@@ -19,33 +19,6 @@ func NewPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
 	return page
 }
 
-// NewMarginalPage
-func NewMarginalPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
-	page := new(page)
-	page.doc = htmlDoc.NewHtmlDoc()
-	page.domain = domain
-	fillPage(page, dto)
-	return page
-}
-
-// NewPostPage
-func NewPostPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
-	page := new(page)
-	page.doc = htmlDoc.NewHtmlDoc()
-	page.domain = domain
-	fillPage(page, dto)
-	return page
-}
-
-// NewNaviPage
-func NewNaviPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
-	page := new(page)
-	page.doc = htmlDoc.NewHtmlDoc()
-	page.domain = domain
-	fillPage(page, dto)
-	return page
-}
-
 func fillPage(page *page, dto staticPersistence.DTO) staticIntf.Page {
 	page.title = dto.Title()
 	page.thumbnailUrl = dto.ThumbUrl()
@@ -105,23 +78,23 @@ type pageContent struct {
 	category      string
 }
 
-func (p *pageContent) GetDoc() *htmlDoc.HtmlDoc { return p.doc }
+func (p pageContent) GetDoc() *htmlDoc.HtmlDoc { return p.doc }
 
-func (p *pageContent) Category() string { return p.category }
+func (p pageContent) Category() string { return p.category }
 
-func (p *pageContent) Id() int { return p.id }
+func (p pageContent) Id() int { return p.id }
 
-func (p *pageContent) ThumbBase64() string { return p.thumbBase64 }
+func (p pageContent) ThumbBase64() string { return p.thumbBase64 }
 
-func (p *pageContent) DisqusId() string { return p.disqusId }
+func (p pageContent) DisqusId() string { return p.disqusId }
 
-func (p *pageContent) Content() string { return p.content }
+func (p pageContent) Content() string { return p.content }
 
-func (p *pageContent) Description() string { return p.description }
+func (p pageContent) Description() string { return p.description }
 
-func (p *pageContent) ImageUrl() string { return p.imageUrl }
+func (p pageContent) ImageUrl() string { return p.imageUrl }
 
-func (p *pageContent) PublishedTime() string {
+func (p pageContent) PublishedTime() string {
 	rx := regexp.MustCompile("(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{1,2}):(\\d{1,2})")
 	m := rx.FindStringSubmatch(p.publishedTime)
 	if len(m) > 1 {
