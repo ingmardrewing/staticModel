@@ -21,7 +21,7 @@ func NewPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
 
 // NewMarginalPage
 func NewMarginalPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
-	page := new(marginalPage)
+	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
 	fillPage(page, dto)
@@ -30,7 +30,7 @@ func NewMarginalPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
 
 // NewPostPage
 func NewPostPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
-	page := new(postPage)
+	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
 	fillPage(page, dto)
@@ -38,72 +38,61 @@ func NewPostPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
 }
 
 // NewNaviPage
-func NewNaviPage(dto staticPersistence.DTO, domain string) staticIntf.NaviPage {
-	page := new(naviPage)
+func NewNaviPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
 	fillPage(page, dto)
 	return page
 }
 
-func NewEmptyNaviPage(domain string) staticIntf.NaviPage {
-	page := new(naviPage)
-	page.doc = htmlDoc.NewHtmlDoc()
-	page.domain = domain
+func fillPage(page *page, dto staticPersistence.DTO) staticIntf.Page {
+	page.title = dto.Title()
+	page.thumbnailUrl = dto.ThumbUrl()
+	page.id = dto.Id()
+	page.description = dto.Description()
+	page.content = dto.Content()
+	page.category = dto.Category()
+	page.imageUrl = dto.ImageUrl()
+	page.publishedTime = dto.CreateDate()
+	page.disqusId = dto.DisqusId()
+	page.htmlfilename = dto.HtmlFilename()
+	page.pathFromDocRoot = dto.PathFromDocRoot()
+	page.thumbBase64 = dto.ThumbBase64()
 	return page
 }
 
-type postPage struct {
-	page
-}
-
-type marginalPage struct {
-	page
-}
-
-func fillPage(page staticIntf.Page, dto staticPersistence.DTO) staticIntf.Page {
-	page.Title(dto.Title())
-	page.ThumbnailUrl(dto.ThumbUrl())
-	page.Id(dto.Id())
-	page.Description(dto.Description())
-	page.Content(dto.Content())
-	page.Category(dto.Category())
-	page.ImageUrl(dto.ImageUrl())
-	page.PublishedTime(dto.CreateDate())
-	page.DisqusId(dto.DisqusId())
-
-	page.HtmlFilename(dto.HtmlFilename())
-	page.PathFromDocRoot(dto.PathFromDocRoot())
-	page.ThumbBase64(dto.ThumbBase64())
-	return page
-}
-
-type naviPage struct {
+// page
+type page struct {
 	loc
 	pageContent
 	navigatedPages []staticIntf.Page
 }
 
-func (p *naviPage) AcceptVisitor(v staticIntf.Component) {
-	v.VisitPage(p)
-}
-
-func (np *naviPage) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
+func (np *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
 	if len(navigatedPages) > 0 {
 		np.navigatedPages = navigatedPages
 	}
 	return np.navigatedPages
 }
 
-type page struct {
-	loc
-	pageContent
+func (p *page) AddHeaderNodes(nodes []*htmlDoc.Node) {
+	for _, n := range nodes {
+		p.doc.AddHeadNode(n)
+	}
+}
+
+func (p *page) AddBodyNodes(nodes []*htmlDoc.Node) {
+	for _, n := range nodes {
+		p.doc.AddBodyNode(n)
+	}
 }
 
 func (p *page) AcceptVisitor(v staticIntf.Component) {
 	v.VisitPage(p)
 }
 
+// pageContent
 type pageContent struct {
 	doc           *htmlDoc.HtmlDoc
 	id            int
@@ -116,60 +105,23 @@ type pageContent struct {
 	category      string
 }
 
-func (p *pageContent) Category(category ...string) string {
-	if len(category) > 0 {
-		p.category = category[0]
-	}
-	return p.category
-}
+func (p *pageContent) GetDoc() *htmlDoc.HtmlDoc { return p.doc }
 
-func (p *pageContent) Id(id ...int) int {
-	if len(id) > 0 {
-		p.id = id[0]
-	}
-	return p.id
-}
+func (p *pageContent) Category() string { return p.category }
 
-func (p *pageContent) ThumbBase64(thumb ...string) string {
-	if len(thumb) > 0 {
-		p.thumbBase64 = thumb[0]
-	}
-	return p.thumbBase64
-}
+func (p *pageContent) Id() int { return p.id }
 
-func (p *pageContent) DisqusId(disqusId ...string) string {
-	if len(disqusId) > 0 {
-		p.disqusId = disqusId[0]
-	}
-	return p.disqusId
-}
+func (p *pageContent) ThumbBase64() string { return p.thumbBase64 }
 
-func (p *pageContent) Content(content ...string) string {
-	if len(content) > 0 {
-		p.content = content[0]
-	}
-	return p.content
-}
+func (p *pageContent) DisqusId() string { return p.disqusId }
 
-func (p *pageContent) Description(description ...string) string {
-	if len(description) > 0 {
-		p.description = description[0]
-	}
-	return p.description
-}
+func (p *pageContent) Content() string { return p.content }
 
-func (p *pageContent) ImageUrl(imageUrl ...string) string {
-	if len(imageUrl) > 0 {
-		p.imageUrl = imageUrl[0]
-	}
-	return p.imageUrl
-}
+func (p *pageContent) Description() string { return p.description }
 
-func (p *pageContent) PublishedTime(publishedTime ...string) string {
-	if len(publishedTime) > 0 {
-		p.publishedTime = publishedTime[0]
-	}
+func (p *pageContent) ImageUrl() string { return p.imageUrl }
 
+func (p *pageContent) PublishedTime() string {
 	rx := regexp.MustCompile("(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{1,2}):(\\d{1,2})")
 	m := rx.FindStringSubmatch(p.publishedTime)
 	if len(m) > 1 {
@@ -190,20 +142,4 @@ func (p *pageContent) PublishedTime(publishedTime ...string) string {
 	}
 
 	return p.publishedTime
-}
-
-func (p *pageContent) GetDoc() *htmlDoc.HtmlDoc {
-	return p.doc
-}
-
-func (p *pageContent) AddHeaderNodes(nodes []*htmlDoc.Node) {
-	for _, n := range nodes {
-		p.doc.AddHeadNode(n)
-	}
-}
-
-func (p *pageContent) AddBodyNodes(nodes []*htmlDoc.Node) {
-	for _, n := range nodes {
-		p.doc.AddBodyNode(n)
-	}
 }
