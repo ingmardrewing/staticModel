@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/ingmardrewing/staticIntf"
+	"github.com/ingmardrewing/staticPersistence"
 )
 
 func NewBlogNaviPageGenerator(site staticIntf.Site, path string) *blogNaviPageGenerator {
@@ -29,14 +30,24 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 			filename = "index.html"
 		}
 
-		np := NewEmptyNaviPage(n.site.Domain())
-		np.NavigatedPages(bundle...)
-		np.Title(n.site.Domain())
-		np.Description("")
+		dto := staticPersistence.NewFilledDto(0,
+			n.site.Domain(),
+			n.site.Domain(),
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			n.site.Domain(),
+			n.path,
+			"",
+			filename,
+			"")
 
-		np.Domain(n.site.Domain())
-		np.PathFromDocRoot(n.path)
-		np.HtmlFilename(filename)
+		np := NewPage(dto, n.site.Domain())
+		np.NavigatedPages(bundle...)
 
 		naviPages = append(naviPages, np)
 	}
