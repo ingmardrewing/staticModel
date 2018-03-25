@@ -3,9 +3,9 @@ package staticModel
 import (
 	"path"
 
-	"github.com/ingmardrewing/fs"
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
+	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates a site dto and the  pages
@@ -30,7 +30,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 
 	site.description = config.DefaultMeta.BlogExcerpt
 
-	if dirExists(config.Src.PostsDir) {
+	if staticUtil.DirExists(config.Src.PostsDir) {
 		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
@@ -42,7 +42,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		site.postNaviPages = bnpg.Createpages()
 	}
 
-	if dirExists(config.Src.MainPages) {
+	if staticUtil.DirExists(config.Src.MainPages) {
 		dtos := staticPersistence.ReadPages(config.Src.MainPages)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
@@ -50,7 +50,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
-	if dirExists(config.Src.MarginalDir) {
+	if staticUtil.DirExists(config.Src.MarginalDir) {
 		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
@@ -63,7 +63,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
-	if dirExists(config.Src.Narrative) {
+	if staticUtil.DirExists(config.Src.Narrative) {
 		dtos := staticPersistence.ReadNarrativePages(config.Src.Narrative)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
@@ -71,7 +71,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 		}
 	}
 
-	if dirExists(config.Src.NarrativeMarginals) {
+	if staticUtil.DirExists(config.Src.NarrativeMarginals) {
 		dtos := staticPersistence.ReadMarginals(
 			config.Src.NarrativeMarginals)
 		for _, dto := range dtos {
@@ -105,14 +105,6 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	return site
-}
-
-func dirExists(path string) bool {
-	exits, err := fs.PathExists(path)
-	if err != nil {
-		return false
-	}
-	return len(path) > 0 && exits
 }
 
 type siteDto struct {

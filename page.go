@@ -7,11 +7,10 @@ import (
 
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
-	"github.com/ingmardrewing/staticPersistence"
 )
 
 // NewMarginalPage
-func NewPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
+func NewPage(dto staticIntf.PageDto, domain string) staticIntf.Page {
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
@@ -19,7 +18,7 @@ func NewPage(dto staticPersistence.DTO, domain string) staticIntf.Page {
 	return page
 }
 
-func fillPage(page *page, dto staticPersistence.DTO) staticIntf.Page {
+func fillPage(page *page, dto staticIntf.PageDto) staticIntf.Page {
 	page.title = dto.Title()
 	page.thumbnailUrl = dto.ThumbUrl()
 	page.id = dto.Id()
