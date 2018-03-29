@@ -31,7 +31,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	site.description = config.DefaultMeta.BlogExcerpt
 
 	if staticUtil.DirExists(config.Src.PostsDir) {
-		dtos := staticPersistence.ReadPosts(config.Src.PostsDir)
+		dtos := staticPersistence.ReadPagesFromDir(config.Src.PostsDir)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
 			newPath := path.Join("/blog/", p.PathFromDocRoot())
@@ -43,7 +43,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	if staticUtil.DirExists(config.Src.MainPages) {
-		dtos := staticPersistence.ReadPages(config.Src.MainPages)
+		dtos := staticPersistence.ReadPagesFromDir(config.Src.MainPages)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
 			site.addMainPage(p)
@@ -51,7 +51,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	if staticUtil.DirExists(config.Src.MarginalDir) {
-		dtos := staticPersistence.ReadMarginals(config.Src.MarginalDir)
+		dtos := staticPersistence.ReadPagesFromDir(config.Src.MarginalDir)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
 			site.addMarginalPage(p)
@@ -64,7 +64,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	if staticUtil.DirExists(config.Src.Narrative) {
-		dtos := staticPersistence.ReadNarrativePages(config.Src.Narrative)
+		dtos := staticPersistence.ReadPagesFromDir(config.Src.Narrative)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
 			site.addNarrativePage(p)
@@ -72,7 +72,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	}
 
 	if staticUtil.DirExists(config.Src.NarrativeMarginals) {
-		dtos := staticPersistence.ReadMarginals(
+		dtos := staticPersistence.ReadPagesFromDir(
 			config.Src.NarrativeMarginals)
 		for _, dto := range dtos {
 			p := NewPage(dto, config.Domain)
