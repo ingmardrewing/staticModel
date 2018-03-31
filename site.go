@@ -1,11 +1,11 @@
 package staticModel
 
 import (
+	"fmt"
 	"path"
 
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
-	"github.com/ingmardrewing/staticUtil"
 )
 
 // Creates a site dto and the  pages
@@ -74,117 +74,132 @@ func (s *siteCreator) addLocations() {
 }
 
 func (s *siteCreator) addPages() {
-	if staticUtil.DirExists(s.config.Src.PostsDir) {
-		dtos := staticPersistence.ReadPagesFromDir(s.config.Src.PostsDir)
+
+	for _, src := range s.config.Src {
+		fmt.Println("Adding page collections: ", src)
+		dtos := staticPersistence.ReadPagesFromDir(src.Dir)
+
+		container := new(pagesContainer)
+		container.variant = src.Type
+		s.site.AddContainer(container)
+
 		for _, dto := range dtos {
 			p := NewPage(dto, s.config.Domain)
-			newPath := path.Join("/blog/", p.PathFromDocRoot())
+
+			newPath := path.Join(src.SubDir, p.PathFromDocRoot())
 			p.PathFromDocRoot(newPath)
-			s.site.addPost(p)
-		}
-		bnpg := NewBlogNaviPageGenerator(s.site, "/blog/")
-		s.site.postNaviPages = bnpg.Createpages()
-	}
 
-	if staticUtil.DirExists(s.config.Src.MainPages) {
-		dtos := staticPersistence.ReadPagesFromDir(s.config.Src.MainPages)
-		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain)
-			s.site.addMainPage(p)
+			container.AddPage(p)
 		}
-	}
-
-	if staticUtil.DirExists(s.config.Src.MarginalDir) {
-		dtos := staticPersistence.ReadPagesFromDir(s.config.Src.MarginalDir)
-		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain)
-			s.site.addMarginalPage(p)
+		fmt.Println("number of pages in container:", len(container.Pages()))
+		if src.Type == "blog" {
+			bnpg := NewBlogNaviPageGenerator(s.site, "/"+src.SubDir, container)
+			n := bnpg.Createpages()
+			for _, p := range n {
+				container.AddNaviPage(p)
+			}
 		}
-
-		locs := ElementsToLocations(s.site.Marginals())
-		for _, l := range locs {
-			s.site.AddMarginal(l)
-		}
-	}
-
-	if staticUtil.DirExists(s.config.Src.Narrative) {
-		dtos := staticPersistence.ReadPagesFromDir(s.config.Src.Narrative)
-		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain)
-			s.site.addNarrativePage(p)
-		}
-	}
-
-	if staticUtil.DirExists(s.config.Src.NarrativeMarginals) {
-		dtos := staticPersistence.ReadPagesFromDir(
-			s.config.Src.NarrativeMarginals)
-		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain)
-			s.site.addNarrativeMarginalPage(p)
+		if src.Type == "marginal" {
+			locs := ElementsToLocations(container.Pages())
+			for _, l := range locs {
+				s.site.AddMarginal(l)
+			}
 		}
 	}
 }
 
 type siteDto struct {
-	pagesContainer
+	pagesContainerCollection
 	locationsContainer
 	configContainer
 }
 
 type pagesContainer struct {
-	posts                  []staticIntf.Page
-	postNaviPages          []staticIntf.Page
-	mainPages              []staticIntf.Page
-	marginalPages          []staticIntf.Page
-	narrativePages         []staticIntf.Page
-	narrativeMarginalPages []staticIntf.Page
-	narrativeArchivePages  []staticIntf.Page
+	variant   string
+	page      []staticIntf.Page
+	naviPages []staticIntf.Page
 }
 
-func (c *pagesContainer) Posts() []staticIntf.Page {
-	return c.posts
-}
-
-func (c *pagesContainer) PostNaviPages() []staticIntf.Page {
-	return c.postNaviPages
+func (c *pagesContainer) Variant() string {
+	return c.variant
 }
 
 func (c *pagesContainer) Pages() []staticIntf.Page {
-	return c.mainPages
+	return c.page
 }
 
-func (c *pagesContainer) Marginals() []staticIntf.Page {
-	return c.marginalPages
+func (c *pagesContainer) NaviPages() []staticIntf.Page {
+	return c.naviPages
 }
 
-func (c *pagesContainer) Narratives() []staticIntf.Page {
-	return c.narrativePages
+func (c *pagesContainer) AddPage(p staticIntf.Page) {
+	c.page = append(c.page, p)
 }
 
-func (c *pagesContainer) NarrativeMarginals() []staticIntf.Page {
-	return c.narrativeMarginalPages
+func (c *pagesContainer) AddNaviPage(p staticIntf.Page) {
+	c.naviPages = append(c.naviPages, p)
 }
 
-func (c *pagesContainer) addMainPage(p staticIntf.Page) {
-	c.mainPages = append(c.mainPages, p)
+//
+type pagesContainerCollection struct {
+	containers []staticIntf.PagesContainer
 }
 
-func (c *pagesContainer) addMarginalPage(p staticIntf.Page) {
-	c.marginalPages = append(c.marginalPages, p)
+func (c *pagesContainerCollection) AddContainer(p staticIntf.PagesContainer) {
+	c.containers = append(c.containers, p)
 }
 
-func (c *pagesContainer) addPost(p staticIntf.Page) {
-	c.posts = append(c.posts, p)
+func (c *pagesContainerCollection) Containers() []staticIntf.PagesContainer {
+	return c.containers
 }
 
-func (c *pagesContainer) addNarrativePage(p staticIntf.Page) {
-	c.narrativePages = append(c.narrativePages, p)
+func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.PagesContainer {
+	for _, co := range c.containers {
+		if co.Variant() == v {
+			return co
+		}
+	}
+	return nil
 }
 
-func (c *pagesContainer) addNarrativeMarginalPage(p staticIntf.Page) {
-	c.narrativeMarginalPages = append(c.narrativeMarginalPages, p)
+func (c *pagesContainerCollection) getPagesByVariant(v string, navi bool) []staticIntf.Page {
+	co := c.getContainerByVariant(v)
+	if co != nil {
+		if navi {
+			return co.NaviPages()
+		} else {
+			return co.Pages()
+		}
+	}
+	return nil
 }
 
+func (c *pagesContainerCollection) Pages() []staticIntf.Page {
+	return c.getPagesByVariant("pages", false)
+}
+
+func (c *pagesContainerCollection) Posts() []staticIntf.Page {
+	pp := c.getPagesByVariant("blog", false)
+	return pp
+}
+
+func (c *pagesContainerCollection) PostNaviPages() []staticIntf.Page {
+	return c.getPagesByVariant("blog", true)
+}
+
+func (c *pagesContainerCollection) Marginals() []staticIntf.Page {
+	return c.getPagesByVariant("marginal", false)
+}
+
+func (c *pagesContainerCollection) Narratives() []staticIntf.Page {
+	return c.getPagesByVariant("narratives", false)
+}
+
+func (c *pagesContainerCollection) NarrativeMarginals() []staticIntf.Page {
+	return c.getPagesByVariant("narrativesMarginals", false)
+}
+
+//
 type locationsContainer struct {
 	main, marginal []staticIntf.Location
 }

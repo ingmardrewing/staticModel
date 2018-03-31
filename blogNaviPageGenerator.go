@@ -7,17 +7,19 @@ import (
 	"github.com/ingmardrewing/staticPersistence"
 )
 
-func NewBlogNaviPageGenerator(site staticIntf.Site, path string) *blogNaviPageGenerator {
+func NewBlogNaviPageGenerator(site staticIntf.Site, path string, container staticIntf.PagesContainer) *blogNaviPageGenerator {
 	b := new(blogNaviPageGenerator)
 	b.site = site
 	b.path = path
+	b.container = container
 	return b
 }
 
 type blogNaviPageGenerator struct {
-	pages []staticIntf.Page
-	site  staticIntf.Site
-	path  string
+	pages     []staticIntf.Page
+	site      staticIntf.Site
+	path      string
+	container staticIntf.PagesContainer
 }
 
 func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
@@ -55,7 +57,7 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 }
 
 func (n *blogNaviPageGenerator) getReversedPages() []staticIntf.Page {
-	pages := n.site.Posts()
+	pages := n.container.Pages()
 	length := len(pages)
 	reversed := make([]staticIntf.Page, 0)
 	for i := length - 1; i >= 0; i-- {
