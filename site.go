@@ -1,7 +1,6 @@
 package staticModel
 
 import (
-	"fmt"
 	"path"
 
 	"github.com/ingmardrewing/staticIntf"
@@ -76,7 +75,6 @@ func (s *siteCreator) addLocations() {
 func (s *siteCreator) addPages() {
 	srcs := s.config.Src
 	for _, src := range srcs {
-		fmt.Println("Adding page collections: ", src)
 		dtos := staticPersistence.ReadPagesFromDir(src.Dir)
 
 		container := new(pagesContainer)
@@ -91,7 +89,6 @@ func (s *siteCreator) addPages() {
 
 			container.AddPage(p)
 		}
-		fmt.Println("number of pages in container:", len(container.Pages()))
 		if src.Type == "blog" {
 			bnpg := NewBlogNaviPageGenerator(s.site, "/"+src.SubDir, container)
 			n := bnpg.Createpages()
