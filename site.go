@@ -74,8 +74,8 @@ func (s *siteCreator) addLocations() {
 }
 
 func (s *siteCreator) addPages() {
-
-	for _, src := range s.config.Src {
+	srcs := s.config.Src
+	for _, src := range srcs {
 		fmt.Println("Adding page collections: ", src)
 		dtos := staticPersistence.ReadPagesFromDir(src.Dir)
 
