@@ -89,11 +89,39 @@ func (s *siteCreator) addPages() {
 
 			container.AddPage(p)
 		}
+		if src.Type == "main" {
+			dto := staticPersistence.NewFilledDto(
+				0,
+				s.config.Domain,
+				s.config.Domain,
+				"",
+				"",
+				s.config.DefaultMeta.BlogExcerpt,
+				"",
+				"",
+				"",
+				"",
+				s.config.Domain,
+				"/",
+				"/",
+				"index.html",
+				"")
+			emptyPage := NewPage(dto, s.config.Domain)
+			container.AddPage(emptyPage)
+		}
 		if src.Type == "blog" {
 			bnpg := NewBlogNaviPageGenerator(s.site, "/"+src.SubDir, container)
 			n := bnpg.Createpages()
 			for _, p := range n {
 				container.AddNaviPage(p)
+			}
+		}
+		if src.Type == "blog" || src.Type == "narrative" {
+			pages := container.Pages()
+			if len(pages) > 3 {
+				for _, pg := range pages[len(pages)-3:] {
+					container.AddRepresentational(pg)
+				}
 			}
 		}
 		if src.Type == "marginal" {
@@ -112,13 +140,18 @@ type siteDto struct {
 }
 
 type pagesContainer struct {
-	variant   string
-	pages     []staticIntf.Page
-	naviPages []staticIntf.Page
+	variant           string
+	pages             []staticIntf.Page
+	naviPages         []staticIntf.Page
+	representationals []staticIntf.Page
 }
 
 func (c *pagesContainer) Variant() string {
 	return c.variant
+}
+
+func (c *pagesContainer) Representationals() []staticIntf.Page {
+	return c.representationals
 }
 
 func (c *pagesContainer) Pages() []staticIntf.Page {
@@ -127,6 +160,10 @@ func (c *pagesContainer) Pages() []staticIntf.Page {
 
 func (c *pagesContainer) NaviPages() []staticIntf.Page {
 	return c.naviPages
+}
+
+func (c *pagesContainer) AddRepresentational(p staticIntf.Page) {
+	c.representationals = append(c.representationals, p)
 }
 
 func (c *pagesContainer) AddPage(p staticIntf.Page) {
@@ -173,6 +210,11 @@ func (c *pagesContainerCollection) getPagesByVariant(v string, navi bool) []stat
 
 func (c *pagesContainerCollection) Pages() []staticIntf.Page {
 	return c.getPagesByVariant("pages", false)
+}
+
+func (c *pagesContainerCollection) Home() []staticIntf.Page {
+	pp := c.getPagesByVariant("main", false)
+	return pp
 }
 
 func (c *pagesContainerCollection) Posts() []staticIntf.Page {
