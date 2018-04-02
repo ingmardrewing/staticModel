@@ -25,7 +25,7 @@
       },
       {
         "dir": "testResources/src/marginal/",
-        "type": "narrativeMarginal",
+        "type": "narrativeMarginals",
         "subDir": "devabo.de"
       }
     ],
@@ -41,8 +41,34 @@
       "cardType": "summary_large_image",
       "section": "article",
       "disqusShortname": "drewing",
-      "header": [],
-      "footer": []
+      "header": [
+        {
+          "label": "blog",
+          "externalLink": "",
+          "filename": "index.html",
+          "path": "/blog/"
+        },
+        {
+          "label": "twitter",
+          "externalLink": "https://twitter.com/ingmardrewing",
+          "filename": "",
+          "path": ""
+        },
+        {
+          "label": "facebook",
+          "externalLink": "https://www.facebook.com/drewing.de",
+          "filename": "",
+          "path": ""
+        }
+      ],
+      "footer": [
+        {
+          "label": "rss",
+          "externalLink": "",
+          "filename": "rss.xml",
+          "path": "/blog/"
+        }
+      ]
     },
     "deploy":{
       "targetDir": "testResources/deploy/",

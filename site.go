@@ -48,7 +48,7 @@ func (s *siteCreator) addConfigData() {
 func (s *siteCreator) addLocations() {
 
 	// add configured main navigation
-	for _, fl := range s.config.Context.Header {
+	for _, fl := range s.config.Context.MainLinks {
 		l := NewLocation(
 			fl.ExternalLink,
 			s.config.Domain,
@@ -60,7 +60,7 @@ func (s *siteCreator) addLocations() {
 	}
 
 	// add configured marginal navigation
-	for _, fl := range s.config.Context.Footer {
+	for _, fl := range s.config.Context.MarginalLinks {
 		l := NewLocation(
 			fl.ExternalLink,
 			s.config.Domain,
@@ -113,7 +113,7 @@ type siteDto struct {
 
 type pagesContainer struct {
 	variant   string
-	page      []staticIntf.Page
+	pages     []staticIntf.Page
 	naviPages []staticIntf.Page
 }
 
@@ -122,7 +122,7 @@ func (c *pagesContainer) Variant() string {
 }
 
 func (c *pagesContainer) Pages() []staticIntf.Page {
-	return c.page
+	return c.pages
 }
 
 func (c *pagesContainer) NaviPages() []staticIntf.Page {
@@ -130,7 +130,7 @@ func (c *pagesContainer) NaviPages() []staticIntf.Page {
 }
 
 func (c *pagesContainer) AddPage(p staticIntf.Page) {
-	c.page = append(c.page, p)
+	c.pages = append(c.pages, p)
 }
 
 func (c *pagesContainer) AddNaviPage(p staticIntf.Page) {
@@ -189,7 +189,7 @@ func (c *pagesContainerCollection) Marginals() []staticIntf.Page {
 }
 
 func (c *pagesContainerCollection) Narratives() []staticIntf.Page {
-	return c.getPagesByVariant("narratives", false)
+	return c.getPagesByVariant("narrative", false)
 }
 
 func (c *pagesContainerCollection) NarrativeMarginals() []staticIntf.Page {
