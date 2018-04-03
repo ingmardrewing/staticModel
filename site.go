@@ -118,8 +118,9 @@ func (s *siteCreator) addPages() {
 		}
 		if src.Type == "blog" || src.Type == "narrative" {
 			pages := container.Pages()
-			if len(pages) > 3 {
-				for _, pg := range pages[len(pages)-3:] {
+			nrOfRepPages := 4
+			if len(pages) > nrOfRepPages {
+				for _, pg := range pages[len(pages)-nrOfRepPages:] {
 					container.AddRepresentational(pg)
 				}
 			}
