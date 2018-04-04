@@ -105,7 +105,8 @@ func (s *siteCreator) addPages() {
 				"/",
 				"/",
 				"index.html",
-				"")
+				"",
+				"main")
 			emptyPage := NewPage(dto, s.config.Domain)
 			container.AddPage(emptyPage)
 		}
