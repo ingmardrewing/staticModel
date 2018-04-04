@@ -18,18 +18,18 @@ func TestNewPage(t *testing.T) {
 		t.Error("Expected", expected, "but got", actual)
 	}
 
-	expectedString := p.Category()
-	actualString := "contentValue"
+	actualString := p.Category()
+	expectedString := "categoryValue"
 
 	if actualString != expectedString {
-		t.Error("Expected", expectedString, "but got", actualString)
+		t.Error("Expected", actualString, "but got", expectedString)
 	}
 
-	expectedDate := "createDateValue"
-	actualDate := p.PublishedTime()
+	actualDate := "createDateValue"
+	expectedDate := p.PublishedTime()
 
 	if actualDate != expectedDate {
-		t.Error("Expected", expectedDate, "but got", actualDate)
+		t.Error("Expected", actualDate, "but got", expectedDate)
 	}
 }
 
@@ -159,7 +159,8 @@ func getPage(time string) *page {
 		"pathValue",
 		"fspathValue",
 		"htmlfilenameValue",
-		"thumbBase64Value")
+		"thumbBase64Value",
+		"categoryValue")
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
