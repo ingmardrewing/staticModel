@@ -25,8 +25,16 @@ func TestNewPage(t *testing.T) {
 		t.Error("Expected", expectedString, "but got", actualString)
 	}
 
-	actualDate := "createDateValue"
-	expectedDate := p.PublishedTime()
+	actualDate := p.PublishedTime()
+	expectedDate := "createDateValue"
+
+	if actualDate != expectedDate {
+		t.Error("Expected", expectedDate, "but got", actualDate)
+	}
+
+	p.publishedTime = "2018-06-06 12:12:12"
+	actualDate = p.PublishedTime("2006")
+	expectedDate = "2018"
 
 	if actualDate != expectedDate {
 		t.Error("Expected", expectedDate, "but got", actualDate)
