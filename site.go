@@ -89,6 +89,7 @@ func (s *siteCreator) addPages() {
 
 			container.AddPage(p)
 		}
+
 		if src.Type == "main" {
 			dto := staticPersistence.NewFilledDto(
 				0,
@@ -117,9 +118,13 @@ func (s *siteCreator) addPages() {
 				container.AddNaviPage(p)
 			}
 		}
-		if src.Type == "blog" || src.Type == "narrative" {
+
+		if src.Type == "blog" || src.Type == "narrative" || src.Type == "portfolio" {
 			pages := container.Pages()
 			nrOfRepPages := 4
+			if src.Type == "portfolio" {
+				nrOfRepPages = len(pages) - 1
+			}
 			if len(pages) > nrOfRepPages {
 				for _, pg := range pages[len(pages)-nrOfRepPages:] {
 					container.AddRepresentational(pg)
@@ -216,6 +221,11 @@ func (c *pagesContainerCollection) Pages() []staticIntf.Page {
 
 func (c *pagesContainerCollection) Home() []staticIntf.Page {
 	pp := c.getPagesByVariant("main", false)
+	return pp
+}
+
+func (c *pagesContainerCollection) Portfolio() []staticIntf.Page {
+	pp := c.getPagesByVariant("portfolio", false)
 	return pp
 }
 
