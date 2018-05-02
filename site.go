@@ -194,6 +194,17 @@ func (c *pagesContainerCollection) Containers() []staticIntf.PagesContainer {
 	return c.containers
 }
 
+func (c *pagesContainerCollection) ContainersOrderedByVariants(variants ...string) []staticIntf.PagesContainer {
+	orderedContainers := []staticIntf.PagesContainer{}
+	for _, v := range variants {
+		container := c.getContainerByVariant(v)
+		if container != nil {
+			orderedContainers = append(orderedContainers)
+		}
+	}
+	return orderedContainers
+}
+
 func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.PagesContainer {
 	for _, co := range c.containers {
 		if co.Variant() == v {
