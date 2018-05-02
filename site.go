@@ -5,6 +5,7 @@ import (
 
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
+	log "github.com/sirupsen/logrus"
 )
 
 // Creates a site dto and the  pages
@@ -195,11 +196,13 @@ func (c *pagesContainerCollection) Containers() []staticIntf.PagesContainer {
 }
 
 func (c *pagesContainerCollection) ContainersOrderedByVariants(variants ...string) []staticIntf.PagesContainer {
+	log.Debug("ContainersOrderedByVariants, nr of containers:", len(c.containers))
 	orderedContainers := []staticIntf.PagesContainer{}
 	for _, v := range variants {
+		log.Debug("ContainersOrderedByVariants - looping through variant:", v)
 		container := c.getContainerByVariant(v)
 		if container != nil {
-			orderedContainers = append(orderedContainers)
+			orderedContainers = append(orderedContainers, container)
 		}
 	}
 	return orderedContainers
@@ -207,7 +210,9 @@ func (c *pagesContainerCollection) ContainersOrderedByVariants(variants ...strin
 
 func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.PagesContainer {
 	for _, co := range c.containers {
+		log.Debug("getContainerByVariant: ", co.Variant(), "==?", v)
 		if co.Variant() == v {
+			log.Debug("getContainerByVariant, returning: ", co.Variant())
 			return co
 		}
 	}
