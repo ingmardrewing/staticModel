@@ -5,6 +5,7 @@ import (
 
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
+	log "github.com/sirupsen/logrus"
 )
 
 // Creates a site dto and the  pages
@@ -89,6 +90,7 @@ func (s *siteCreator) addPages() {
 
 			container.AddPage(p)
 		}
+
 		if src.Type == "main" {
 			dto := staticPersistence.NewFilledDto(
 				0,
@@ -117,9 +119,13 @@ func (s *siteCreator) addPages() {
 				container.AddNaviPage(p)
 			}
 		}
-		if src.Type == "blog" || src.Type == "narrative" {
+
+		if src.Type == "blog" || src.Type == "narrative" || src.Type == "portfolio" {
 			pages := container.Pages()
 			nrOfRepPages := 4
+			if src.Type == "portfolio" {
+				nrOfRepPages = len(pages) - 1
+			}
 			if len(pages) > nrOfRepPages {
 				for _, pg := range pages[len(pages)-nrOfRepPages:] {
 					container.AddRepresentational(pg)
@@ -189,9 +195,24 @@ func (c *pagesContainerCollection) Containers() []staticIntf.PagesContainer {
 	return c.containers
 }
 
+func (c *pagesContainerCollection) ContainersOrderedByVariants(variants ...string) []staticIntf.PagesContainer {
+	log.Debug("ContainersOrderedByVariants, nr of containers:", len(c.containers))
+	orderedContainers := []staticIntf.PagesContainer{}
+	for _, v := range variants {
+		log.Debug("ContainersOrderedByVariants - looping through variant:", v)
+		container := c.getContainerByVariant(v)
+		if container != nil {
+			orderedContainers = append(orderedContainers, container)
+		}
+	}
+	return orderedContainers
+}
+
 func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.PagesContainer {
 	for _, co := range c.containers {
+		log.Debug("getContainerByVariant: ", co.Variant(), "==?", v)
 		if co.Variant() == v {
+			log.Debug("getContainerByVariant, returning: ", co.Variant())
 			return co
 		}
 	}
@@ -216,6 +237,11 @@ func (c *pagesContainerCollection) Pages() []staticIntf.Page {
 
 func (c *pagesContainerCollection) Home() []staticIntf.Page {
 	pp := c.getPagesByVariant("main", false)
+	return pp
+}
+
+func (c *pagesContainerCollection) Portfolio() []staticIntf.Page {
+	pp := c.getPagesByVariant("portfolio", false)
 	return pp
 }
 

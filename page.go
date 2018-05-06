@@ -93,9 +93,10 @@ func (p pageContent) Description() string { return p.description }
 
 func (p pageContent) ImageUrl() string { return p.imageUrl }
 
-func (p pageContent) PublishedTime() string {
+func (p pageContent) PublishedTime(format ...string) string {
 	rx := regexp.MustCompile("(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{1,2}):(\\d{1,2})")
 	m := rx.FindStringSubmatch(p.publishedTime)
+
 	if len(m) > 1 {
 		m := rx.FindStringSubmatch(p.publishedTime)
 		conv := func(a string) int { i, _ := strconv.Atoi(a); return i }
@@ -109,6 +110,9 @@ func (p pageContent) PublishedTime() string {
 			conv(m[6]),
 			0,
 			loc)
+		if len(format) > 0 {
+			return t.Format(format[0])
+		}
 		stamp := t.Format("Mon, 02 Jan 2006 15:04:05")
 		return stamp + " +0100"
 	}

@@ -22,14 +22,22 @@ func TestNewPage(t *testing.T) {
 	expectedString := "categoryValue"
 
 	if actualString != expectedString {
-		t.Error("Expected", actualString, "but got", expectedString)
+		t.Error("Expected", expectedString, "but got", actualString)
 	}
 
-	actualDate := "createDateValue"
-	expectedDate := p.PublishedTime()
+	actualDate := p.PublishedTime()
+	expectedDate := "createDateValue"
 
 	if actualDate != expectedDate {
-		t.Error("Expected", actualDate, "but got", expectedDate)
+		t.Error("Expected", expectedDate, "but got", actualDate)
+	}
+
+	p.publishedTime = "2018-06-06 12:12:12"
+	actualDate = p.PublishedTime("2006")
+	expectedDate = "2018"
+
+	if actualDate != expectedDate {
+		t.Error("Expected", expectedDate, "but got", actualDate)
 	}
 }
 
