@@ -44,6 +44,8 @@ func (s *siteCreator) addConfigData() {
 	s.site.disqusId = s.config.Context.DisqusShortname
 	s.site.targetDir = s.config.Deploy.TargetDir
 	s.site.description = s.config.DefaultMeta.BlogExcerpt
+	s.site.homeText = s.config.HomeText
+	s.site.homeHeadline = s.config.HomeHeadline
 }
 
 func (s *siteCreator) addLocations() {
@@ -108,7 +110,8 @@ func (s *siteCreator) addPages() {
 				"/",
 				"index.html",
 				"",
-				"main")
+				"main",
+				"")
 			emptyPage := NewPage(dto, s.config.Domain)
 			container.AddPage(emptyPage)
 		}
@@ -308,34 +311,40 @@ type configContainer struct {
 	disqusId      string
 	targetDir     string
 	description   string
+	homeText      string
+	homeHeadline  string
 }
 
-func (s *configContainer) TwitterHandle() string { return s.twitterHandle }
+func (cc *configContainer) TwitterHandle() string { return cc.twitterHandle }
 
-func (s *configContainer) Description() string { return s.description }
+func (cc *configContainer) Description() string { return cc.description }
 
-func (s *configContainer) Topic() string { return s.topic }
+func (cc *configContainer) Topic() string { return cc.topic }
 
-func (s *configContainer) Tags() string { return s.tags }
+func (cc *configContainer) Tags() string { return cc.tags }
 
-func (s *configContainer) Site() string { return s.domain }
+func (cc *configContainer) Site() string { return cc.domain }
 
-func (s *configContainer) CardType() string { return s.cardType }
+func (cc *configContainer) CardType() string { return cc.cardType }
 
-func (s *configContainer) Section() string { return s.section }
+func (cc *configContainer) Section() string { return cc.section }
 
-func (s *configContainer) FBPage() string { return s.fbPage }
+func (cc *configContainer) FBPage() string { return cc.fbPage }
 
-func (s *configContainer) TwitterPage() string { return s.twitterPage }
+func (cc *configContainer) TwitterPage() string { return cc.twitterPage }
 
-func (s *configContainer) RssPath() string { return s.rssPath }
+func (cc *configContainer) RssPath() string { return cc.rssPath }
 
-func (s *configContainer) RssFilename() string { return s.rssFilename }
+func (cc *configContainer) RssFilename() string { return cc.rssFilename }
 
-func (s *configContainer) Css() string { return s.css }
+func (cc *configContainer) Css() string { return cc.css }
 
-func (s *configContainer) Domain() string { return s.domain }
+func (cc *configContainer) Domain() string { return cc.domain }
 
-func (s *configContainer) DisqusId() string { return s.disqusId }
+func (cc *configContainer) DisqusId() string { return cc.disqusId }
 
-func (s *configContainer) TargetDir() string { return s.targetDir }
+func (cc *configContainer) TargetDir() string { return cc.targetDir }
+
+func (cc *configContainer) HomeText() string { return cc.homeText }
+
+func (cc *configContainer) HomeHeadline() string { return cc.homeHeadline }
