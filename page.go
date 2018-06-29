@@ -21,6 +21,7 @@ func NewPage(dto staticIntf.PageDto, domain string) staticIntf.Page {
 func fillPage(page *page, dto staticIntf.PageDto) staticIntf.Page {
 	page.title = dto.Title()
 	page.thumbnailUrl = dto.ThumbUrl()
+	page.microThumbnailUrl = dto.MicroThumbUrl()
 	page.id = dto.Id()
 	page.description = dto.Description()
 	page.content = dto.Content()
