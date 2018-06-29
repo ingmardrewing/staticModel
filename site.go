@@ -58,7 +58,8 @@ func (s *siteCreator) addLocations() {
 			fl.Label,
 			"",
 			fl.Path,
-			fl.FileName)
+			fl.FileName,
+			"")
 		s.site.AddMain(l)
 	}
 
@@ -70,7 +71,8 @@ func (s *siteCreator) addLocations() {
 			fl.Label,
 			"",
 			fl.Path,
-			fl.FileName)
+			fl.FileName,
+			"")
 		s.site.AddMarginal(l)
 	}
 }

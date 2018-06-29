@@ -146,7 +146,24 @@ func getSiteDto() *siteDto {
 }
 
 func TestConfigContainer(t *testing.T) {
-	c := &configContainer{"twitterHandle", "topic", "tags", "cardType", "section", "fbPage", "twitterPage", "rssPath", "rssFilename", "css", "domain", "disqusId", "targetDir", "description"}
+
+	c := &configContainer{
+		"twitterHandle",
+		"topic",
+		"tags",
+		"cardType",
+		"section",
+		"fbPage",
+		"twitterPage",
+		"rssPath",
+		"rssFilename",
+		"css",
+		"domain",
+		"disqusId",
+		"targetDir",
+		"description",
+		"homeText",
+		"homeHeadline"}
 
 	if c.TwitterHandle() != "twitterHandle" {
 		t.Error("configCointainer returning wrong value on TwitterHandle()")
