@@ -6,17 +6,18 @@ import (
 )
 
 // Creates a new Loc, implementing Location Interface
-func NewLocation(externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename string) *loc {
-	return &loc{externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename}
+func NewLocation(externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename, microThumbnailUrl string) *loc {
+	return &loc{externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename, microThumbnailUrl}
 }
 
 type loc struct {
-	extLink         string
-	domain          string
-	title           string
-	thumbnailUrl    string
-	pathFromDocRoot string
-	htmlfilename    string
+	extLink           string
+	domain            string
+	title             string
+	thumbnailUrl      string
+	pathFromDocRoot   string
+	htmlfilename      string
+	microThumbnailUrl string
 }
 
 func (l *loc) PathFromDocRootWithName() string {
@@ -72,4 +73,11 @@ func (l *loc) ThumbnailUrl(thumbnailUrl ...string) string {
 		l.thumbnailUrl = thumbnailUrl[0]
 	}
 	return l.thumbnailUrl
+}
+
+func (l *loc) MicroThumbnailUrl(microThumbnailUrl ...string) string {
+	if len(microThumbnailUrl) > 0 {
+		l.microThumbnailUrl = microThumbnailUrl[0]
+	}
+	return l.microThumbnailUrl
 }

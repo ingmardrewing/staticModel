@@ -86,5 +86,5 @@ func TestExternalLinks(t *testing.T) {
 }
 
 func getLocation() *loc {
-	return NewLocation("https://example.com", "example.com", "test-title", "thumbnailUrl", "pathFromDocRoot", "filename")
+	return NewLocation("https://example.com", "example.com", "test-title", "thumbnailUrl", "pathFromDocRoot", "filename", "microThumbnailUrl")
 }

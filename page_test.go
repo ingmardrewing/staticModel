@@ -168,7 +168,8 @@ func getPage(time string) *page {
 		"fspathValue",
 		"htmlfilenameValue",
 		"thumbBase64Value",
-		"categoryValue")
+		"categoryValue",
+		"microThumbnailUrl")
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
