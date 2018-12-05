@@ -42,11 +42,11 @@ type page struct {
 	navigatedPages []staticIntf.Page
 }
 
-func (np *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
+func (p *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
 	if len(navigatedPages) > 0 {
-		np.navigatedPages = navigatedPages
+		p.navigatedPages = navigatedPages
 	}
-	return np.navigatedPages
+	return p.navigatedPages
 }
 
 func (p *page) AddHeaderNodes(nodes []*htmlDoc.Node) {
