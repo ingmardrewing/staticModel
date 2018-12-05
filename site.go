@@ -103,8 +103,7 @@ func (s *siteCreator) addPages() {
 		s.site.AddContainer(container)
 
 		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain)
-			p.Site(s.site)
+			p := NewPage(dto, s.config.Domain, s.site)
 
 			newPath := path.Join(src.SubDir, p.PathFromDocRoot())
 			p.PathFromDocRoot(newPath)
@@ -131,7 +130,7 @@ func (s *siteCreator) addPages() {
 				"",
 				"main",
 				"")
-			emptyPage := NewPage(dto, s.config.Domain)
+			emptyPage := NewPage(dto, s.config.Domain, s.site)
 			container.AddPage(emptyPage)
 		}
 		if src.Type == "blog" {
@@ -348,7 +347,7 @@ func (cc *configContainer) Topic() string { return cc.topic }
 
 func (cc *configContainer) Tags() string { return cc.tags }
 
-func (cc *configContainer) Site() string { return cc.domain }
+func (cc *configContainer) SiteName() string { return cc.domain }
 
 func (cc *configContainer) CardType() string { return cc.cardType }
 

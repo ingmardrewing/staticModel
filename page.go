@@ -10,10 +10,11 @@ import (
 )
 
 // NewMarginalPage
-func NewPage(dto staticIntf.PageDto, domain string) staticIntf.Page {
+func NewPage(dto staticIntf.PageDto, domain string, site staticIntf.Site) staticIntf.Page {
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
+	page.site = site
 	fillPage(page, dto)
 	return page
 }
@@ -66,10 +67,7 @@ func (p *page) AcceptVisitor(v staticIntf.Component) {
 	v.VisitPage(p)
 }
 
-func (p *page) Site(s ...staticIntf.Site) staticIntf.Site {
-	if len(s) == 1 {
-		p.site = s[0]
-	}
+func (p *page) Site() staticIntf.Site {
 	return p.site
 }
 
