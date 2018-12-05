@@ -39,6 +39,7 @@ func fillPage(page *page, dto staticIntf.PageDto) staticIntf.Page {
 type page struct {
 	loc
 	pageContent
+	site           staticIntf.Site
 	navigatedPages []staticIntf.Page
 }
 
@@ -63,6 +64,13 @@ func (p *page) AddBodyNodes(nodes []*htmlDoc.Node) {
 
 func (p *page) AcceptVisitor(v staticIntf.Component) {
 	v.VisitPage(p)
+}
+
+func (p *page) Site(s ...staticIntf.Site) staticIntf.Site {
+	if len(s) == 1 {
+		p.site = s[0]
+	}
+	return p.site
 }
 
 // pageContent

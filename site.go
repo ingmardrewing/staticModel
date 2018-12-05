@@ -19,6 +19,13 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	return siteCreator.site
 }
 
+func RewriteJson(config staticPersistence.JsonConfig) {
+	siteCreator := new(siteCreator)
+	siteCreator.init(config)
+	siteCreator.addConfigData()
+	siteCreator.rewritePages()
+}
+
 type siteCreator struct {
 	site   *siteDto
 	config staticPersistence.JsonConfig
@@ -77,6 +84,15 @@ func (s *siteCreator) addLocations() {
 	}
 }
 
+func (s *siteCreator) rewritePages() {
+	srcs := s.config.Src
+	for _, src := range srcs {
+		//dtos := staticPersistence.ReadPagesFromDir(src.Dir)
+		staticPersistence.ReadPagesFromDir(src.Dir)
+	}
+
+}
+
 func (s *siteCreator) addPages() {
 	srcs := s.config.Src
 	for _, src := range srcs {
@@ -88,6 +104,7 @@ func (s *siteCreator) addPages() {
 
 		for _, dto := range dtos {
 			p := NewPage(dto, s.config.Domain)
+			p.Site(s.site)
 
 			newPath := path.Join(src.SubDir, p.PathFromDocRoot())
 			p.PathFromDocRoot(newPath)
@@ -125,7 +142,7 @@ func (s *siteCreator) addPages() {
 			}
 		}
 
-		if src.Type == "blog" || src.Type == "narrative" || src.Type == "portfolio" {
+		if src.Type == "blog" || src.Type == "narrative" {
 			pages := container.Pages()
 			nrOfRepPages := 4
 			if src.Type == "portfolio" {
@@ -135,6 +152,12 @@ func (s *siteCreator) addPages() {
 				for _, pg := range pages[len(pages)-nrOfRepPages:] {
 					container.AddRepresentational(pg)
 				}
+			}
+		}
+		if src.Type == "portfolio" {
+			pages := container.Pages()
+			for _, pg := range pages {
+				container.AddRepresentational(pg)
 			}
 		}
 		if src.Type == "marginal" {
