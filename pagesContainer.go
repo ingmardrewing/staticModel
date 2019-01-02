@@ -7,6 +7,7 @@ import (
 
 type pagesContainer struct {
 	variant           string
+	headline          string
 	pages             []staticIntf.Page
 	naviPages         []staticIntf.Page
 	representationals []staticIntf.Page
@@ -14,6 +15,10 @@ type pagesContainer struct {
 
 func (c *pagesContainer) Variant() string {
 	return c.variant
+}
+
+func (c *pagesContainer) Headline() string {
+	return c.headline
 }
 
 func (c *pagesContainer) Representationals() []staticIntf.Page {
@@ -58,12 +63,22 @@ func (c *pagesContainerCollection) ContainersOrderedByVariants(variants ...strin
 	orderedContainers := []staticIntf.PagesContainer{}
 	for _, v := range variants {
 		log.Debug("ContainersOrderedByVariants - looping through variant:", v)
-		container := c.getContainerByVariant(v)
+		container := c.getContainersByVariant(v)
 		if container != nil {
-			orderedContainers = append(orderedContainers, container)
+			orderedContainers = append(orderedContainers, container...)
 		}
 	}
 	return orderedContainers
+}
+
+func (c *pagesContainerCollection) getContainersByVariant(v string) []staticIntf.PagesContainer {
+	containers := []staticIntf.PagesContainer{}
+	for _, co := range c.containers {
+		if co.Variant() == v {
+			containers = append(containers, co)
+		}
+	}
+	return containers
 }
 
 func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.PagesContainer {
@@ -78,12 +93,20 @@ func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.Pa
 }
 
 func (c *pagesContainerCollection) getPagesByVariant(v string, navi bool) []staticIntf.Page {
-	co := c.getContainerByVariant(v)
-	if co != nil {
+	co := c.getContainersByVariant(v)
+	if len(co) > 0 {
 		if navi {
-			return co.NaviPages()
+			nps := []staticIntf.Page{}
+			for _, c := range co {
+				nps = append(nps, c.NaviPages()...)
+			}
+			return nps
 		} else {
-			return co.Pages()
+			ps := []staticIntf.Page{}
+			for _, c := range co {
+				ps = append(ps, c.Pages()...)
+			}
+			return ps
 		}
 	}
 	return nil

@@ -15,6 +15,7 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	siteCreator.addConfigData()
 	siteCreator.addPages()
 	siteCreator.addLocations()
+
 	return siteCreator.site
 }
 
@@ -89,7 +90,6 @@ func (s *siteCreator) rewritePages() {
 		//dtos := staticPersistence.ReadPagesFromDir(src.Dir)
 		staticPersistence.ReadPagesFromDir(src.Dir)
 	}
-
 }
 
 func (s *siteCreator) addPages() {
@@ -99,6 +99,7 @@ func (s *siteCreator) addPages() {
 
 		container := new(pagesContainer)
 		container.variant = src.Type
+		container.headline = src.Headline
 		s.site.AddContainer(container)
 
 		for _, dto := range dtos {
@@ -143,9 +144,6 @@ func (s *siteCreator) addPages() {
 		if src.Type == "blog" || src.Type == "narrative" {
 			pages := container.Pages()
 			nrOfRepPages := 4
-			if src.Type == "portfolio" {
-				nrOfRepPages = len(pages) - 1
-			}
 			if len(pages) > nrOfRepPages {
 				for _, pg := range pages[len(pages)-nrOfRepPages:] {
 					container.AddRepresentational(pg)
