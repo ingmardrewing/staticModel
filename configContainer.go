@@ -1,6 +1,8 @@
 package staticModel
 
 type configContainer struct {
+	domain        string
+	basePath      string
 	twitterHandle string
 	topic         string
 	tags          string
@@ -11,7 +13,6 @@ type configContainer struct {
 	rssPath       string
 	rssFilename   string
 	css           string
-	domain        string
 	disqusId      string
 	targetDir     string
 	description   string
@@ -42,6 +43,8 @@ func (cc *configContainer) RssFilename() string { return cc.rssFilename }
 func (cc *configContainer) Css() string { return cc.css }
 
 func (cc *configContainer) Domain() string { return cc.domain }
+
+func (cc *configContainer) BasePath() string { return cc.basePath }
 
 func (cc *configContainer) DisqusId() string { return cc.disqusId }
 

@@ -13,6 +13,47 @@ type pagesContainer struct {
 	representationals []staticIntf.Page
 }
 
+func (c *pagesContainer) getIndexOfPage(p staticIntf.Page) int {
+	for i, l := range c.pages {
+		lurl := l.PathFromDocRoot() + l.HtmlFilename()
+		purl := p.PathFromDocRoot() + p.HtmlFilename()
+		if lurl == purl {
+			return i
+		}
+	}
+	return -1
+}
+
+func (c *pagesContainer) GetLastPage() staticIntf.Page {
+	if len(c.pages) > 0 {
+		return c.pages[len(c.pages)-1]
+	}
+	return nil
+}
+
+func (c *pagesContainer) GetFirstPage() staticIntf.Page {
+	if len(c.pages) > 0 {
+		return c.pages[0]
+	}
+	return nil
+}
+
+func (c *pagesContainer) GetPageBefore(p staticIntf.Page) staticIntf.Page {
+	i := c.getIndexOfPage(p)
+	if i > 0 {
+		return c.pages[i-1]
+	}
+	return nil
+}
+
+func (c *pagesContainer) GetPageAfter(p staticIntf.Page) staticIntf.Page {
+	i := c.getIndexOfPage(p)
+	if i+1 < len(c.pages) {
+		return c.pages[i+1]
+	}
+	return nil
+}
+
 func (c *pagesContainer) Variant() string {
 	return c.variant
 }
@@ -38,7 +79,18 @@ func (c *pagesContainer) AddRepresentational(p staticIntf.Page) {
 }
 
 func (c *pagesContainer) AddPage(p staticIntf.Page) {
-	c.pages = append(c.pages, p)
+	if !c.pageAlreadyExists(p) {
+		c.pages = append(c.pages, p)
+	}
+}
+
+func (c *pagesContainer) pageAlreadyExists(p staticIntf.Page) bool {
+	for _, otherPage := range c.pages {
+		if p.PathFromDocRoot() == otherPage.PathFromDocRoot() {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *pagesContainer) AddNaviPage(p staticIntf.Page) {

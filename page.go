@@ -1,6 +1,7 @@
 package staticModel
 
 import (
+	"path"
 	"regexp"
 	"strconv"
 	"time"
@@ -10,11 +11,17 @@ import (
 )
 
 // NewMarginalPage
-func NewPage(dto staticIntf.PageDto, domain string, site staticIntf.Site) staticIntf.Page {
+func NewPage(
+	dto staticIntf.PageDto,
+	domain string,
+	site staticIntf.Site,
+	container staticIntf.PagesContainer) staticIntf.Page {
+
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
 	page.site = site
+	page.container = container
 	fillPage(page, dto)
 	return page
 }
@@ -41,7 +48,16 @@ type page struct {
 	loc
 	pageContent
 	site           staticIntf.Site
+	container      staticIntf.PagesContainer
 	navigatedPages []staticIntf.Page
+}
+
+func (p *page) Container() staticIntf.PagesContainer {
+	return p.container
+}
+
+func (p *page) Link() string {
+	return "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
 }
 
 func (p *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {

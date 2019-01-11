@@ -1,10 +1,12 @@
 package staticModel
 
 import (
+	"fmt"
 	"path"
 
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
+	log "github.com/sirupsen/logrus"
 )
 
 // Creates a site dto and the  pages
@@ -41,6 +43,7 @@ func (s *siteCreator) addConfigData() {
 	s.site.topic = s.config.Context.Topic
 	s.site.tags = s.config.Context.Tags
 	s.site.domain = s.config.Domain
+	s.site.basePath = s.config.BasePath
 	s.site.cardType = s.config.Context.CardType
 	s.site.section = s.config.Context.Section
 	s.site.fbPage = s.config.Context.FbPage
@@ -97,17 +100,19 @@ func (s *siteCreator) addPages() {
 	for _, src := range srcs {
 		dtos := staticPersistence.ReadPagesFromDir(src.Dir)
 
+		log.Debug(fmt.Sprintf("-- new container, type %s, headline %s", src.Type, src.Headline))
 		container := new(pagesContainer)
 		container.variant = src.Type
 		container.headline = src.Headline
 		s.site.AddContainer(container)
 
 		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain, s.site)
+			p := NewPage(dto, s.config.Domain, s.site, container)
 
 			newPath := path.Join(src.SubDir, p.PathFromDocRoot())
 			p.PathFromDocRoot(newPath)
 
+			log.Debug(fmt.Sprintf("page, path:%s", newPath))
 			container.AddPage(p)
 		}
 
@@ -130,7 +135,7 @@ func (s *siteCreator) addPages() {
 				"",
 				"main",
 				"")
-			emptyPage := NewPage(dto, s.config.Domain, s.site)
+			emptyPage := NewPage(dto, s.config.Domain, s.site, nil)
 			container.AddPage(emptyPage)
 		}
 		if src.Type == "blog" {
@@ -156,6 +161,7 @@ func (s *siteCreator) addPages() {
 				container.AddRepresentational(pg)
 			}
 		}
+
 		if src.Type == "marginal" {
 			locs := ElementsToLocations(container.Pages())
 			for _, l := range locs {
