@@ -15,9 +15,7 @@ type pagesContainer struct {
 
 func (c *pagesContainer) getIndexOfPage(p staticIntf.Page) int {
 	for i, l := range c.pages {
-		lurl := l.PathFromDocRoot() + l.HtmlFilename()
-		purl := p.PathFromDocRoot() + p.HtmlFilename()
-		if lurl == purl {
+		if l.Link() == p.Link() {
 			return i
 		}
 	}
