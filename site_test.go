@@ -148,6 +148,8 @@ func getSiteDto() *siteDto {
 func TestConfigContainer(t *testing.T) {
 
 	c := &configContainer{
+		"domain",
+		"basePath",
 		"twitterHandle",
 		"topic",
 		"tags",
@@ -158,7 +160,6 @@ func TestConfigContainer(t *testing.T) {
 		"rssPath",
 		"rssFilename",
 		"css",
-		"domain",
 		"disqusId",
 		"targetDir",
 		"description",
@@ -179,10 +180,6 @@ func TestConfigContainer(t *testing.T) {
 
 	if c.Tags() != "tags" {
 		t.Error("configCointainer returning wrong value on Tags()")
-	}
-
-	if c.Site() != "domain" {
-		t.Error("configCointainer returning wrong value on Site()")
 	}
 
 	if c.CardType() != "cardType" {
