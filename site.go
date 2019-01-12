@@ -138,8 +138,11 @@ func (s *siteCreator) addPages() {
 			emptyPage := NewPage(dto, s.config.Domain, s.site, nil)
 			container.AddPage(emptyPage)
 		}
+
 		if src.Type == "blog" {
-			bnpg := NewBlogNaviPageGenerator(s.site, "/"+src.SubDir, container)
+			bnpg := NewBlogNaviPageGenerator(
+				s.site, "/"+src.SubDir,
+				container)
 			n := bnpg.Createpages()
 			for _, p := range n {
 				container.AddNaviPage(p)
