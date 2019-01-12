@@ -139,6 +139,8 @@ func (s *siteCreator) addPages() {
 			container.AddPage(emptyPage)
 		}
 
+		// TODO: Move this to a more apropriate place:
+
 		if src.Type == "blog" {
 			bnpg := NewBlogNaviPageGenerator(
 				s.site,
