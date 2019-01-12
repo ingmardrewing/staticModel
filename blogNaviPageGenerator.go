@@ -30,6 +30,7 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 	bundles := n.generateBundles()
 	last := len(bundles) - 1
 	naviPages := make([]staticIntf.Page, 0)
+
 	for i, bundle := range bundles {
 		filename := "index" + strconv.Itoa(i) + ".html"
 		if i == last {
@@ -54,7 +55,7 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 			"blog post navi",
 			"")
 
-		np := NewPage(dto, n.site.Domain(), n.site, n.container)
+		np := NewPage(dto, n.site.Domain(), n.site)
 		np.NavigatedPages(bundle...)
 
 		naviPages = append(naviPages, np)

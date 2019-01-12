@@ -107,7 +107,7 @@ func (s *siteCreator) addPages() {
 		s.site.AddContainer(container)
 
 		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain, s.site, container)
+			p := NewPage(dto, s.config.Domain, s.site)
 
 			newPath := path.Join(src.SubDir, p.PathFromDocRoot())
 			p.PathFromDocRoot(newPath)
@@ -135,17 +135,20 @@ func (s *siteCreator) addPages() {
 				"",
 				"main",
 				"")
-			emptyPage := NewPage(dto, s.config.Domain, s.site, nil)
+			emptyPage := NewPage(dto, s.config.Domain, s.site)
 			container.AddPage(emptyPage)
 		}
 
 		if src.Type == "blog" {
 			bnpg := NewBlogNaviPageGenerator(
-				s.site, "/"+src.SubDir,
+				s.site,
+				"/"+src.SubDir,
 				container)
-			n := bnpg.Createpages()
-			for _, p := range n {
+			naviPagesContainer := new(pagesContainer)
+			naviPages := bnpg.Createpages()
+			for _, p := range naviPages {
 				container.AddNaviPage(p)
+				naviPagesContainer.AddPage(p)
 			}
 		}
 

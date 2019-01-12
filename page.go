@@ -14,14 +14,12 @@ import (
 func NewPage(
 	dto staticIntf.PageDto,
 	domain string,
-	site staticIntf.Site,
-	container staticIntf.PagesContainer) staticIntf.Page {
+	site staticIntf.Site) staticIntf.Page {
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
 	page.site = site
-	page.container = container
 	fillPage(page, dto)
 	return page
 }
@@ -52,7 +50,10 @@ type page struct {
 	navigatedPages []staticIntf.Page
 }
 
-func (p *page) Container() staticIntf.PagesContainer {
+func (p *page) Container(container ...staticIntf.PagesContainer) staticIntf.PagesContainer {
+	if len(container) > 0 {
+		p.container = container[0]
+	}
 	return p.container
 }
 

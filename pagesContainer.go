@@ -81,12 +81,13 @@ func (c *pagesContainer) AddRepresentational(p staticIntf.Page) {
 func (c *pagesContainer) AddPage(p staticIntf.Page) {
 	if !c.pageAlreadyExists(p) {
 		c.pages = append(c.pages, p)
+		p.Container(c)
 	}
 }
 
 func (c *pagesContainer) pageAlreadyExists(p staticIntf.Page) bool {
 	for _, otherPage := range c.pages {
-		if p.PathFromDocRoot() == otherPage.PathFromDocRoot() {
+		if p.Link() == otherPage.Link() {
 			return true
 		}
 	}
