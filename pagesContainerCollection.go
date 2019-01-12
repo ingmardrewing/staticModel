@@ -51,57 +51,18 @@ func (c *pagesContainerCollection) getContainerByVariant(v string) staticIntf.Pa
 	return nil
 }
 
-func (c *pagesContainerCollection) getPagesByVariant(v string, navi bool) []staticIntf.Page {
-	co := c.getContainersByVariant(v)
-	if len(co) > 0 {
-		if navi {
-			nps := []staticIntf.Page{}
-			for _, c := range co {
-				nps = append(nps, c.NaviPages()...)
-			}
-			return nps
-		} else {
-			ps := []staticIntf.Page{}
-			for _, c := range co {
-				ps = append(ps, c.Pages()...)
-			}
-			return ps
-		}
+func (c *pagesContainerCollection) GetNaviPagesByVariant(v string) []staticIntf.Page {
+	nps := []staticIntf.Page{}
+	for _, c := range c.getContainersByVariant(v) {
+		nps = append(nps, c.NaviPages()...)
 	}
-	return nil
+	return nps
 }
 
-func (c *pagesContainerCollection) Pages() []staticIntf.Page {
-	return c.getPagesByVariant("pages", false)
-}
-
-func (c *pagesContainerCollection) Home() []staticIntf.Page {
-	pp := c.getPagesByVariant("main", false)
-	return pp
-}
-
-func (c *pagesContainerCollection) Portfolio() []staticIntf.Page {
-	pp := c.getPagesByVariant("portfolio", false)
-	return pp
-}
-
-func (c *pagesContainerCollection) Posts() []staticIntf.Page {
-	pp := c.getPagesByVariant("blog", false)
-	return pp
-}
-
-func (c *pagesContainerCollection) PostNaviPages() []staticIntf.Page {
-	return c.getPagesByVariant("blog", true)
-}
-
-func (c *pagesContainerCollection) Marginals() []staticIntf.Page {
-	return c.getPagesByVariant("marginal", false)
-}
-
-func (c *pagesContainerCollection) Narratives() []staticIntf.Page {
-	return c.getPagesByVariant("narrative", false)
-}
-
-func (c *pagesContainerCollection) NarrativeMarginals() []staticIntf.Page {
-	return c.getPagesByVariant("narrativesMarginals", false)
+func (c *pagesContainerCollection) GetPagesByVariant(v string) []staticIntf.Page {
+	ps := []staticIntf.Page{}
+	for _, c := range c.getContainersByVariant(v) {
+		ps = append(ps, c.Pages()...)
+	}
+	return ps
 }
