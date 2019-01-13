@@ -1,12 +1,8 @@
 package staticModel
 
 import (
-	"fmt"
-	"path"
-
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticPersistence"
-	log "github.com/sirupsen/logrus"
 )
 
 // Creates a site dto and the  pages
@@ -19,6 +15,12 @@ func NewSiteDto(config staticPersistence.JsonConfig) staticIntf.Site {
 	siteCreator.addLocations()
 
 	return siteCreator.site
+}
+
+type siteDto struct {
+	pagesContainerCollection
+	locationsContainer
+	configContainer
 }
 
 func RewriteJson(config staticPersistence.JsonConfig) {
@@ -88,99 +90,22 @@ func (s *siteCreator) addLocations() {
 }
 
 func (s *siteCreator) rewritePages() {
-	srcs := s.config.Src
-	for _, src := range srcs {
+	for _, src := range s.config.Src {
 		//dtos := staticPersistence.ReadPagesFromDir(src.Dir)
 		staticPersistence.ReadPagesFromDir(src.Dir)
 	}
 }
 
 func (s *siteCreator) addPages() {
-	srcs := s.config.Src
-	for _, src := range srcs {
-		dtos := staticPersistence.ReadPagesFromDir(src.Dir)
-
-		log.Debug(fmt.Sprintf("-- new container, type %s, headline %s", src.Type, src.Headline))
-		container := new(pagesContainer)
-		container.variant = src.Type
-		container.headline = src.Headline
-		s.site.AddContainer(container)
-
-		for _, dto := range dtos {
-			p := NewPage(dto, s.config.Domain, s.site)
-
-			newPath := path.Join(src.SubDir, p.PathFromDocRoot())
-			p.PathFromDocRoot(newPath)
-
-			log.Debug(fmt.Sprintf("page, path:%s", newPath))
-			container.AddPage(p)
-		}
-
-		if src.Type == "main" {
-			dto := staticPersistence.NewFilledDto(
-				0,
-				s.config.Domain,
-				s.config.Domain,
-				"",
-				"",
-				s.config.DefaultMeta.BlogExcerpt,
-				"",
-				"",
-				"",
-				"",
-				s.config.Domain,
-				"/",
-				"/",
-				"index.html",
-				"",
-				"main",
-				"")
-			emptyPage := NewPage(dto, s.config.Domain, s.site)
-			container.AddPage(emptyPage)
-		}
-
-		// TODO: Move this to a more apropriate place:
-
-		if src.Type == "blog" {
-			bnpg := NewBlogNaviPageGenerator(
-				s.site,
-				"/"+src.SubDir,
-				container)
-			naviPagesContainer := new(pagesContainer)
-			naviPages := bnpg.Createpages()
-			for _, p := range naviPages {
-				container.AddNaviPage(p)
-				naviPagesContainer.AddPage(p)
-			}
-		}
-
-		if src.Type == "blog" || src.Type == "narrative" {
-			pages := container.Pages()
-			nrOfRepPages := 4
-			if len(pages) > nrOfRepPages {
-				for _, pg := range pages[len(pages)-nrOfRepPages:] {
-					container.AddRepresentational(pg)
-				}
-			}
-		}
-		if src.Type == "portfolio" {
-			pages := container.Pages()
-			for _, pg := range pages {
-				container.AddRepresentational(pg)
-			}
-		}
-
-		if src.Type == "marginal" {
-			locs := ElementsToLocations(container.Pages())
-			for _, l := range locs {
-				s.site.AddMarginal(l)
-			}
-		}
+	for _, src := range s.config.Src {
+		sr := NewSource(
+			src.Type,
+			src.Dir,
+			src.SubDir,
+			src.Headline,
+			s.site,
+			s.config)
+		sr.generate()
+		s.site.AddContainer(sr.Container())
 	}
-}
-
-type siteDto struct {
-	pagesContainerCollection
-	locationsContainer
-	configContainer
 }
