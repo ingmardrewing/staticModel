@@ -1,6 +1,7 @@
 package staticModel
 
 import (
+	"path"
 	"regexp"
 	"strconv"
 	"time"
@@ -10,10 +11,15 @@ import (
 )
 
 // NewMarginalPage
-func NewPage(dto staticIntf.PageDto, domain string) staticIntf.Page {
+func NewPage(
+	dto staticIntf.PageDto,
+	domain string,
+	site staticIntf.Site) staticIntf.Page {
+
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
 	page.domain = domain
+	page.site = site
 	fillPage(page, dto)
 	return page
 }
@@ -39,14 +45,27 @@ func fillPage(page *page, dto staticIntf.PageDto) staticIntf.Page {
 type page struct {
 	loc
 	pageContent
+	site           staticIntf.Site
+	container      staticIntf.PagesContainer
 	navigatedPages []staticIntf.Page
 }
 
-func (np *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
-	if len(navigatedPages) > 0 {
-		np.navigatedPages = navigatedPages
+func (p *page) Container(container ...staticIntf.PagesContainer) staticIntf.PagesContainer {
+	if len(container) > 0 {
+		p.container = container[0]
 	}
-	return np.navigatedPages
+	return p.container
+}
+
+func (p *page) Link() string {
+	return "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+}
+
+func (p *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
+	if len(navigatedPages) > 0 {
+		p.navigatedPages = navigatedPages
+	}
+	return p.navigatedPages
 }
 
 func (p *page) AddHeaderNodes(nodes []*htmlDoc.Node) {
@@ -63,6 +82,10 @@ func (p *page) AddBodyNodes(nodes []*htmlDoc.Node) {
 
 func (p *page) AcceptVisitor(v staticIntf.Component) {
 	v.VisitPage(p)
+}
+
+func (p *page) Site() staticIntf.Site {
+	return p.site
 }
 
 // pageContent

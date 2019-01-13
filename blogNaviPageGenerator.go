@@ -7,7 +7,11 @@ import (
 	"github.com/ingmardrewing/staticPersistence"
 )
 
-func NewBlogNaviPageGenerator(site staticIntf.Site, path string, container staticIntf.PagesContainer) *blogNaviPageGenerator {
+func NewBlogNaviPageGenerator(
+	site staticIntf.Site,
+	path string,
+	container staticIntf.PagesContainer) *blogNaviPageGenerator {
+
 	b := new(blogNaviPageGenerator)
 	b.site = site
 	b.path = path
@@ -26,6 +30,7 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 	bundles := n.generateBundles()
 	last := len(bundles) - 1
 	naviPages := make([]staticIntf.Page, 0)
+
 	for i, bundle := range bundles {
 		filename := "index" + strconv.Itoa(i) + ".html"
 		if i == last {
@@ -50,7 +55,7 @@ func (n *blogNaviPageGenerator) Createpages() []staticIntf.Page {
 			"blog post navi",
 			"")
 
-		np := NewPage(dto, n.site.Domain())
+		np := NewPage(dto, n.site.Domain(), n.site)
 		np.NavigatedPages(bundle...)
 
 		naviPages = append(naviPages, np)
