@@ -2,6 +2,16 @@ package staticModel
 
 import "github.com/ingmardrewing/staticIntf"
 
+func NewPagesContainer(variant, headline string) staticIntf.PagesContainer {
+	pc := new(pagesContainer)
+	pc.variant = variant
+	pc.headline = headline
+	pc.pages = []staticIntf.Page{}
+	pc.naviPages = []staticIntf.Page{}
+	pc.representationals = []staticIntf.Page{}
+	return pc
+}
+
 type pagesContainer struct {
 	variant           string
 	headline          string
