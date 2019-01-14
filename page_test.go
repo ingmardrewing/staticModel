@@ -153,6 +153,7 @@ func getPage(time string) *page {
 	if len(time) > 0 {
 		t = time
 	}
+
 	dto := staticPersistence.NewFilledDto(42,
 		"titleValue",
 		"titlePlainValue",
@@ -171,11 +172,7 @@ func getPage(time string) *page {
 		"categoryValue",
 		"microThumbnailUrl")
 
-	page := new(page)
-	page.doc = htmlDoc.NewHtmlDoc()
-	page.domain = "testDomain"
-	fillPage(page, dto)
-	return page
+	return NewPage(dto, "testDomain", nil)
 }
 
 type mockedComponent struct {
