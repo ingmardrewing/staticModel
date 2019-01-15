@@ -10,7 +10,8 @@ import (
 func NewPage(
 	dto staticIntf.PageDto,
 	domain string,
-	site staticIntf.Site) *page {
+	site staticIntf.Site,
+	subDir string) *page {
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
@@ -29,7 +30,7 @@ func NewPage(
 	page.publishedTime = dto.CreateDate()
 	page.disqusId = dto.DisqusId()
 	page.htmlfilename = dto.HtmlFilename()
-	page.pathFromDocRoot = dto.PathFromDocRoot()
+	page.pathFromDocRoot = path.Join(subDir, dto.PathFromDocRoot())
 	page.thumbBase64 = dto.ThumbBase64()
 
 	return page
