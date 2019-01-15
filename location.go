@@ -1,36 +1,49 @@
 package staticModel
 
-import (
-	"path"
-	"strings"
-)
-
 // Creates a new Loc, implementing Location Interface
-func NewLocation(externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename, microThumbnailUrl string) *loc {
-	return &loc{externalLink, prodDomain, title, thumbnailUrl, pathFromDocRoot, fsFilename, microThumbnailUrl}
+func NewLocation(
+	externalLink,
+	domain,
+	title,
+	thumbnailUrl,
+	pathFromDocRoot,
+	htmlfilename,
+	microThumbnailUrl,
+	pathFromDocRootWithName,
+	url string) *loc {
+
+	l := new(loc)
+	l.extLink = externalLink
+	l.domain = domain
+	l.title = title
+	l.thumbnailUrl = thumbnailUrl
+	l.pathFromDocRoot = pathFromDocRoot
+	l.htmlfilename = htmlfilename
+	l.microThumbnailUrl = microThumbnailUrl
+	l.pathFromDocRootWithName = pathFromDocRootWithName
+	l.url = url
+
+	return l
 }
 
 type loc struct {
-	extLink           string
-	domain            string
-	title             string
-	thumbnailUrl      string
-	pathFromDocRoot   string
-	htmlfilename      string
-	microThumbnailUrl string
+	extLink                 string
+	domain                  string
+	title                   string
+	thumbnailUrl            string
+	pathFromDocRoot         string
+	htmlfilename            string
+	microThumbnailUrl       string
+	pathFromDocRootWithName string
+	url                     string
 }
 
 func (l *loc) PathFromDocRootWithName() string {
-	p := path.Join(l.pathFromDocRoot, l.htmlfilename)
-	if !strings.HasPrefix(p, "/") {
-		p = "/" + p
-	}
-	return p
+	return l.pathFromDocRootWithName
 }
 
 func (l *loc) Url() string {
-	p := path.Join(l.domain, l.PathFromDocRootWithName())
-	return "https://" + p
+	return l.url
 }
 
 func (l *loc) ExternalLink() string {
