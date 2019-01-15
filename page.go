@@ -30,8 +30,13 @@ func NewPage(
 	page.publishedTime = dto.CreateDate()
 	page.disqusId = dto.DisqusId()
 	page.htmlfilename = dto.HtmlFilename()
-	page.pathFromDocRoot = path.Join(subDir, dto.PathFromDocRoot())
 	page.thumbBase64 = dto.ThumbBase64()
+
+	pth := path.Join(subDir, dto.PathFromDocRoot())
+
+	page.pathFromDocRoot = pth
+	page.pathFromDocRootWithName = path.Join(pth, dto.HtmlFilename())
+	page.url = "https://" + path.Join(domain, pth, dto.HtmlFilename())
 
 	return page
 }
