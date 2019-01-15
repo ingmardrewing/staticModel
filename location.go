@@ -33,51 +33,30 @@ func (l *loc) Url() string {
 	return "https://" + p
 }
 
-func (l *loc) ExternalLink(extLink ...string) string {
-	if len(extLink) > 0 {
-		l.extLink = extLink[0]
-	}
+func (l *loc) ExternalLink() string {
 	return l.extLink
 }
 
-func (l *loc) Domain(domain ...string) string {
-	if len(domain) > 0 {
-		l.domain = domain[0]
-	}
+func (l *loc) Domain() string {
 	return l.domain
 }
 
-func (l *loc) PathFromDocRoot(pathFromDocRoot ...string) string {
-	if len(pathFromDocRoot) > 0 {
-		l.pathFromDocRoot = pathFromDocRoot[0]
-	}
+func (l *loc) PathFromDocRoot() string {
 	return l.pathFromDocRoot
 }
 
-func (l *loc) HtmlFilename(htmlfilename ...string) string {
-	if len(htmlfilename) > 0 {
-		l.htmlfilename = htmlfilename[0]
-	}
+func (l *loc) HtmlFilename() string {
 	return l.htmlfilename
 }
 
-func (l *loc) Title(title ...string) string {
-	if len(title) > 0 {
-		l.title = title[0]
-	}
+func (l *loc) Title() string {
 	return l.title
 }
 
-func (l *loc) ThumbnailUrl(thumbnailUrl ...string) string {
-	if len(thumbnailUrl) > 0 {
-		l.thumbnailUrl = thumbnailUrl[0]
-	}
+func (l *loc) ThumbnailUrl() string {
 	return l.thumbnailUrl
 }
 
-func (l *loc) MicroThumbnailUrl(microThumbnailUrl ...string) string {
-	if len(microThumbnailUrl) > 0 {
-		l.microThumbnailUrl = microThumbnailUrl[0]
-	}
+func (l *loc) MicroThumbnailUrl() string {
 	return l.microThumbnailUrl
 }

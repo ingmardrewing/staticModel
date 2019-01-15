@@ -172,7 +172,7 @@ func getPage(time string) *page {
 		"categoryValue",
 		"microThumbnailUrl")
 
-	return NewPage(dto, "testDomain", nil)
+	return NewPage(dto, "testDomain", nil, "")
 }
 
 type mockedComponent struct {
