@@ -57,7 +57,10 @@ func (p *page) Container(container ...staticIntf.PagesContainer) staticIntf.Page
 }
 
 func (p *page) Link() string {
-	return "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+	if p.site != nil {
+		return "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+	}
+	return "/" + path.Join(p.pathFromDocRoot, p.htmlfilename)
 }
 
 func (p *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {

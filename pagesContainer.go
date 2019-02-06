@@ -3,6 +3,8 @@ package staticModel
 import (
 	"github.com/ingmardrewing/staticIntf"
 	"github.com/ingmardrewing/staticUtil"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func NewPagesContainer(variant, headline string) staticIntf.PagesContainer {
@@ -44,6 +46,7 @@ func (c *pagesContainer) NaviPages() []staticIntf.Page {
 }
 
 func (c *pagesContainer) AddRepresentational(p staticIntf.Page) {
+	log.Debug("pagesContainer.AddRepresentational()")
 	c.representationals = append(c.representationals, p)
 }
 
