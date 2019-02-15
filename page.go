@@ -10,8 +10,7 @@ import (
 func NewPage(
 	dto staticIntf.PageDto,
 	domain string,
-	site staticIntf.Site,
-	subDir string) *page {
+	site staticIntf.Site) *page {
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
@@ -31,12 +30,9 @@ func NewPage(
 	page.disqusId = dto.DisqusId()
 	page.htmlfilename = dto.HtmlFilename()
 	page.thumbBase64 = dto.ThumbBase64()
-
-	pth := path.Join(subDir, dto.PathFromDocRoot())
-
-	page.pathFromDocRoot = pth
-	page.pathFromDocRootWithName = path.Join(pth, dto.HtmlFilename())
-	page.url = "https://" + path.Join(domain, pth, dto.HtmlFilename())
+	page.pathFromDocRoot = dto.PathFromDocRoot()
+	page.pathFromDocRootWithName = path.Join(dto.PathFromDocRoot(), dto.HtmlFilename())
+	page.url = "https://" + path.Join(domain, dto.PathFromDocRoot(), dto.HtmlFilename())
 
 	return page
 }
