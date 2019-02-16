@@ -41,6 +41,17 @@ func TestNewPage(t *testing.T) {
 	}
 }
 
+func TestUrl(t *testing.T) {
+	p := getPage("")
+
+	expected := "https://testDomain/pathValue/htmlfilenameValue"
+	actual := p.Url()
+
+	if actual != expected {
+		t.Error("Expected", expected, "but got", actual)
+	}
+}
+
 func TestAddHeaderNodes(t *testing.T) {
 	p := getPage("")
 
@@ -105,17 +116,6 @@ func TestContent(t *testing.T) {
 	}
 }
 
-func TestDisqusId(t *testing.T) {
-	p := getPage("")
-
-	actual := p.DisqusId()
-	expected := "disqusIdValue"
-
-	if actual != expected {
-		t.Error("Expected", expected, "but got", actual)
-	}
-}
-
 func TestThumbBase64(t *testing.T) {
 	p := getPage("")
 
@@ -160,19 +160,18 @@ func getPage(time string) *page {
 		"thumbUrlValue",
 		"imageUrlValue",
 		"descriptionValue",
-		"disqusIdValue",
 		t,
 		"contentValue",
-		"urlValue",
-		"domainValue",
 		"pathValue",
 		"fspathValue",
 		"htmlfilenameValue",
 		"thumbBase64Value",
 		"categoryValue",
-		"microThumbnailUrl")
+		"microThumbnailUrl",
+		[]string{},
+		[]staticIntf.Image{})
 
-	return NewPage(dto, "testDomain", nil, "")
+	return NewPage(dto, "testDomain", nil)
 }
 
 type mockedComponent struct {

@@ -2,6 +2,7 @@ package staticModel
 
 import (
 	"path"
+	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
@@ -10,8 +11,7 @@ import (
 func NewPage(
 	dto staticIntf.PageDto,
 	domain string,
-	site staticIntf.Site,
-	subDir string) *page {
+	site staticIntf.Site) *page {
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
@@ -28,15 +28,11 @@ func NewPage(
 	page.category = dto.Category()
 	page.imageUrl = dto.ImageUrl()
 	page.publishedTime = dto.CreateDate()
-	page.disqusId = dto.DisqusId()
 	page.htmlfilename = dto.HtmlFilename()
 	page.thumbBase64 = dto.ThumbBase64()
-
-	pth := path.Join(subDir, dto.PathFromDocRoot())
-
-	page.pathFromDocRoot = pth
-	page.pathFromDocRootWithName = path.Join(pth, dto.HtmlFilename())
-	page.url = "https://" + path.Join(domain, pth, dto.HtmlFilename())
+	page.pathFromDocRoot = dto.PathFromDocRoot()
+	page.pathFromDocRootWithName = path.Join(dto.PathFromDocRoot(), dto.HtmlFilename())
+	page.url = "https://" + path.Join(domain, dto.PathFromDocRoot(), dto.HtmlFilename())
 
 	return page
 }
@@ -58,9 +54,17 @@ func (p *page) Container(container ...staticIntf.PagesContainer) staticIntf.Page
 
 func (p *page) Link() string {
 	if p.site != nil {
-		return "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+		l := "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+		if strings.HasPrefix(l, "//") {
+			l = strings.TrimPrefix(l, "/")
+		}
+		return l
 	}
-	return "/" + path.Join(p.pathFromDocRoot, p.htmlfilename)
+	l := "/" + path.Join(p.pathFromDocRoot, p.htmlfilename)
+	if strings.HasPrefix(l, "//") {
+		l = strings.TrimPrefix(l, "/")
+	}
+	return l
 }
 
 func (p *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
