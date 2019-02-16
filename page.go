@@ -27,7 +27,6 @@ func NewPage(
 	page.category = dto.Category()
 	page.imageUrl = dto.ImageUrl()
 	page.publishedTime = dto.CreateDate()
-	page.disqusId = dto.DisqusId()
 	page.htmlfilename = dto.HtmlFilename()
 	page.thumbBase64 = dto.ThumbBase64()
 	page.pathFromDocRoot = dto.PathFromDocRoot()
