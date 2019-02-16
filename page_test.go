@@ -41,6 +41,17 @@ func TestNewPage(t *testing.T) {
 	}
 }
 
+func TestUrl(t *testing.T) {
+	p := getPage("")
+
+	expected := "https://testDomain/pathValue/htmlfilenameValue"
+	actual := p.Url()
+
+	if actual != expected {
+		t.Error("Expected", expected, "but got", actual)
+	}
+}
+
 func TestAddHeaderNodes(t *testing.T) {
 	p := getPage("")
 
