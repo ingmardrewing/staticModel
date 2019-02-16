@@ -2,6 +2,7 @@ package staticModel
 
 import (
 	"path"
+	"strings"
 
 	"github.com/ingmardrewing/htmlDoc"
 	"github.com/ingmardrewing/staticIntf"
@@ -53,9 +54,17 @@ func (p *page) Container(container ...staticIntf.PagesContainer) staticIntf.Page
 
 func (p *page) Link() string {
 	if p.site != nil {
-		return "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+		l := "/" + path.Join(p.site.BasePath(), p.pathFromDocRoot, p.htmlfilename)
+		if strings.HasPrefix(l, "//") {
+			l = strings.TrimPrefix(l, "/")
+		}
+		return l
 	}
-	return "/" + path.Join(p.pathFromDocRoot, p.htmlfilename)
+	l := "/" + path.Join(p.pathFromDocRoot, p.htmlfilename)
+	if strings.HasPrefix(l, "//") {
+		l = strings.TrimPrefix(l, "/")
+	}
+	return l
 }
 
 func (p *page) NavigatedPages(navigatedPages ...staticIntf.Page) []staticIntf.Page {
