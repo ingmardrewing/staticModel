@@ -21,7 +21,8 @@ func TestConfigContainer(t *testing.T) {
 		"targetDir",
 		"description",
 		"homeText",
-		"homeHeadline"}
+		"homeHeadline",
+		"svgLogo"}
 
 	if c.TwitterHandle() != "twitterHandle" {
 		t.Error("configCointainer returning wrong value on TwitterHandle()")
