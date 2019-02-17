@@ -17,7 +17,8 @@ func NewSiteDto(
 	targetDir,
 	description,
 	homeText,
-	homeHeadline string) *siteDto {
+	homeHeadline,
+	svgLogo string) *siteDto {
 
 	site := new(siteDto)
 
@@ -38,6 +39,7 @@ func NewSiteDto(
 	site.description = description
 	site.homeText = homeText
 	site.homeHeadline = homeHeadline
+	site.svgLogo = svgLogo
 
 	return site
 }

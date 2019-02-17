@@ -18,6 +18,7 @@ type configContainer struct {
 	description   string
 	homeText      string
 	homeHeadline  string
+	svgLogo       string
 }
 
 func (cc *configContainer) TwitterHandle() string { return cc.twitterHandle }
@@ -43,6 +44,8 @@ func (cc *configContainer) RssFilename() string { return cc.rssFilename }
 func (cc *configContainer) Css() string { return cc.css }
 
 func (cc *configContainer) Domain() string { return cc.domain }
+
+func (cc *configContainer) SvgLogo() string { return cc.svgLogo }
 
 func (cc *configContainer) BasePath() string { return cc.basePath }
 
