@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ingmardrewing/htmlDoc"
+	"github.com/ingmardrewing/staticIntf"
 )
 
 // pageContent
@@ -19,6 +20,8 @@ type pageContent struct {
 	disqusId      string
 	thumbBase64   string
 	category      string
+	images        []staticIntf.Image
+	createdDate   string
 }
 
 func (p pageContent) GetDoc() *htmlDoc.HtmlDoc { return p.doc }
@@ -35,7 +38,11 @@ func (p pageContent) Content() string { return p.content }
 
 func (p pageContent) Description() string { return p.description }
 
+func (p pageContent) Images() []staticIntf.Image { return p.images }
+
 func (p pageContent) ImageUrl() string { return p.imageUrl }
+
+func (p pageContent) CreatedDate() string { return p.createdDate }
 
 func (p pageContent) PublishedTime(format ...string) string {
 	rx := regexp.MustCompile("(\\d{4})-(\\d{1,2})-(\\d{1,2}) (\\d{1,2}):(\\d{1,2}):(\\d{1,2})")
