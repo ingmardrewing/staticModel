@@ -1,25 +1,24 @@
 package staticModel
 
 type configContainer struct {
-	domain             string
-	basePath           string
-	twitterHandle      string
-	topic              string
-	tags               string
-	cardType           string
-	section            string
-	fbPage             string
-	twitterPage        string
-	rssPath            string
-	rssFilename        string
-	css                string
-	disqusId           string
-	targetDir          string
-	description        string
-	homeText           string
-	homeHeadline       string
-	svgLogo            string
-	defaultDescription string
+	domain        string
+	basePath      string
+	twitterHandle string
+	topic         string
+	tags          string
+	cardType      string
+	section       string
+	fbPage        string
+	twitterPage   string
+	rssPath       string
+	rssFilename   string
+	css           string
+	disqusId      string
+	targetDir     string
+	description   string
+	homeText      string
+	homeHeadline  string
+	svgLogo       string
 }
 
 func (cc *configContainer) TwitterHandle() string { return cc.twitterHandle }
@@ -57,5 +56,3 @@ func (cc *configContainer) TargetDir() string { return cc.targetDir }
 func (cc *configContainer) HomeText() string { return cc.homeText }
 
 func (cc *configContainer) HomeHeadline() string { return cc.homeHeadline }
-
-func (cc *configContainer) DefaultDescription() string { return cc.defaultDescription }
