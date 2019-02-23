@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ingmardrewing/htmlDoc"
+	"github.com/ingmardrewing/staticIntf"
 )
 
 // pageContent
@@ -19,6 +20,7 @@ type pageContent struct {
 	disqusId      string
 	thumbBase64   string
 	category      string
+	images        []staticIntf.Image
 }
 
 func (p pageContent) GetDoc() *htmlDoc.HtmlDoc { return p.doc }
@@ -34,6 +36,8 @@ func (p pageContent) DisqusId() string { return p.disqusId }
 func (p pageContent) Content() string { return p.content }
 
 func (p pageContent) Description() string { return p.description }
+
+func (p pageContent) Images() []staticIntf.Image { return p.images }
 
 func (p pageContent) ImageUrl() string { return p.imageUrl }
 

@@ -21,7 +21,7 @@ func NewPage(
 	// TODO: Make page understand image splice
 	if len(dto.Images()) > 0 {
 		firstImage := dto.Images()[0]
-		page.microThumbnailUrl = firstImage.W190Square()
+		page.microThumbnailUrl = firstImage.W185Square()
 		page.thumbnailUrl = firstImage.W390Square()
 		page.imageUrl = firstImage.W800Square()
 
