@@ -11,13 +11,6 @@ import (
 func TestNewPage(t *testing.T) {
 	p := getPage("")
 
-	expected := p.Id()
-	actual := 42
-
-	if actual != expected {
-		t.Error("Expected", expected, "but got", actual)
-	}
-
 	actualString := p.Category()
 	expectedString := "categoryValue"
 
@@ -116,17 +109,6 @@ func TestContent(t *testing.T) {
 	}
 }
 
-func TestThumbBase64(t *testing.T) {
-	p := getPage("")
-
-	actual := p.ThumbBase64()
-	expected := "thumbBase64Value"
-
-	if actual != expected {
-		t.Error("Expected", expected, "but got", actual)
-	}
-}
-
 func TestAcceptVisitor(t *testing.T) {
 	p := getPage("")
 	v := new(mockedComponent)
@@ -154,22 +136,25 @@ func getPage(time string) *page {
 		t = time
 	}
 
-	dto := staticPersistence.NewFilledDto(42,
+	img := staticPersistence.NewImageDto(
 		"titleValue",
-		"titlePlainValue",
-		"thumbUrlValue",
+		"",
+		"",
+		"",
 		"imageUrlValue",
+		"",
+		"",
+		"")
+	dto := staticPersistence.NewFilledDto(
+		"titleValue",
 		"descriptionValue",
-		t,
 		"contentValue",
-		"pathValue",
-		"fspathValue",
-		"htmlfilenameValue",
-		"thumbBase64Value",
 		"categoryValue",
-		"microThumbnailUrl",
+		t,
+		"pathValue",
+		"htmlfilenameValue",
 		[]string{},
-		[]staticIntf.Image{})
+		[]staticIntf.Image{img})
 
 	return NewPage(dto, "testDomain", nil)
 }

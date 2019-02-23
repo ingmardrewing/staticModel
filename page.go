@@ -18,21 +18,27 @@ func NewPage(
 	page.domain = domain
 	page.site = site
 
-	// fill with data from dto
+	// TODO: Make page understand image splice
+	if len(dto.Images()) > 0 {
+		firstImage := dto.Images()[0]
+		page.microThumbnailUrl = firstImage.W190Square()
+		page.thumbnailUrl = firstImage.W390Square()
+		page.imageUrl = firstImage.W800Square()
+
+		// TODO: Reimplement narrative archive page
+		// and remove this completely:
+		page.thumbBase64 = ""
+	}
+
 	page.title = dto.Title()
-	page.thumbnailUrl = dto.ThumbUrl()
-	page.microThumbnailUrl = dto.MicroThumbUrl()
-	page.id = dto.Id()
 	page.description = dto.Description()
 	page.content = dto.Content()
 	page.category = dto.Category()
-	page.imageUrl = dto.ImageUrl()
 	page.publishedTime = dto.CreateDate()
-	page.htmlfilename = dto.HtmlFilename()
-	page.thumbBase64 = dto.ThumbBase64()
+	page.htmlfilename = dto.Filename()
 	page.pathFromDocRoot = dto.PathFromDocRoot()
-	page.pathFromDocRootWithName = path.Join(dto.PathFromDocRoot(), dto.HtmlFilename())
-	page.url = "https://" + path.Join(domain, dto.PathFromDocRoot(), dto.HtmlFilename())
+	page.pathFromDocRootWithName = path.Join(dto.PathFromDocRoot(), dto.Filename())
+	page.url = "https://" + path.Join(domain, dto.PathFromDocRoot(), dto.Filename())
 
 	return page
 }
