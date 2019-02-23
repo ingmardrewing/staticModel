@@ -30,6 +30,7 @@ func NewPage(
 		page.thumbBase64 = ""
 	}
 
+	page.images = dto.Images()
 	page.title = dto.Title()
 	page.description = dto.Description()
 	page.content = dto.Content()
