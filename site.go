@@ -16,6 +16,9 @@ func NewSiteDto(
 	disqusId,
 	targetDir,
 	description,
+	keyWords,
+	subject,
+	author,
 	homeText,
 	homeHeadline,
 	svgLogo string) *siteDto {
@@ -36,7 +39,12 @@ func NewSiteDto(
 	site.css = css
 	site.disqusId = disqusId
 	site.targetDir = targetDir
+
 	site.description = description
+	site.keyWords = keyWords
+	site.author = author
+	site.subject = subject
+
 	site.homeText = homeText
 	site.homeHeadline = homeHeadline
 	site.svgLogo = svgLogo
