@@ -19,6 +19,9 @@ type configContainer struct {
 	homeText      string
 	homeHeadline  string
 	svgLogo       string
+	keyWords      string
+	subject       string
+	author        string
 }
 
 func (cc *configContainer) TwitterHandle() string { return cc.twitterHandle }
@@ -56,3 +59,9 @@ func (cc *configContainer) TargetDir() string { return cc.targetDir }
 func (cc *configContainer) HomeText() string { return cc.homeText }
 
 func (cc *configContainer) HomeHeadline() string { return cc.homeHeadline }
+
+func (cc *configContainer) KeyWords() string { return cc.keyWords }
+
+func (cc *configContainer) Subject() string { return cc.subject }
+
+func (cc *configContainer) Author() string { return cc.author }
