@@ -145,7 +145,7 @@ func getPage(time string) *page {
 		"",
 		"",
 		"")
-	dto := staticPersistence.NewFilledDto(
+	dto := staticPersistence.NewPageDto(
 		"titleValue",
 		"descriptionValue",
 		"contentValue",
