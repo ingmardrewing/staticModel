@@ -135,7 +135,28 @@ func getPage(time string) *page {
 	if len(time) > 0 {
 		t = time
 	}
-
+	site := NewSiteDto(
+		"twitterHandle",
+		"topic",
+		"tags",
+		"testDomain",
+		"basePath",
+		"cardType",
+		"section",
+		"fbPage",
+		"twitterPage",
+		"rssPath",
+		"rssFilename",
+		"css",
+		"disqusId",
+		"targetDir",
+		"description",
+		"keyWords",
+		"subject",
+		"author",
+		"homeText",
+		"homeHeadline",
+		"svgLogo")
 	img := staticPersistence.NewImageDto(
 		"titleValue",
 		"",
@@ -157,7 +178,7 @@ func getPage(time string) *page {
 		[]string{},
 		[]staticIntf.Image{img})
 
-	return NewPage(dto, nil)
+	return NewPage(dto, site)
 }
 
 type mockedComponent struct {
