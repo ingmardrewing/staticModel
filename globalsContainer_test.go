@@ -4,7 +4,7 @@ import "testing"
 
 func TestConfigContainer(t *testing.T) {
 
-	c := &configContainer{
+	c := &globalsContainer{
 		"domain",
 		"basePath",
 		"twitterHandle",

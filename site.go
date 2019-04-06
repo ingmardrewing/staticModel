@@ -55,5 +55,5 @@ func NewSiteDto(
 type siteDto struct {
 	pagesContainerCollection
 	locationsContainer
-	configContainer
+	globalsContainer
 }
