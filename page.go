@@ -10,12 +10,10 @@ import (
 
 func NewPage(
 	dto staticIntf.PageDto,
-	domain string,
 	site staticIntf.Site) *page {
 
 	page := new(page)
 	page.doc = htmlDoc.NewHtmlDoc()
-	page.domain = domain
 	page.site = site
 
 	// TODO: Make page understand image splice
@@ -39,7 +37,7 @@ func NewPage(
 	page.htmlfilename = dto.Filename()
 	page.pathFromDocRoot = dto.PathFromDocRoot()
 	page.pathFromDocRootWithName = path.Join(dto.PathFromDocRoot(), dto.Filename())
-	page.url = "https://" + path.Join(domain, dto.PathFromDocRoot(), dto.Filename())
+	page.url = "https://" + path.Join(site.Domain(), dto.PathFromDocRoot(), dto.Filename())
 
 	return page
 }
