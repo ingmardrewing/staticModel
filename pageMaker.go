@@ -48,7 +48,6 @@ func (pm *pageMaker) Make() staticIntf.Page {
 		pm.images)
 	newPage := NewPage(
 		dto,
-		pm.site.Domain(),
 		pm.site)
 	newPage.NavigatedPages(pm.navigatedPages...)
 	return newPage

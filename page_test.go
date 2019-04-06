@@ -145,6 +145,7 @@ func getPage(time string) *page {
 		"",
 		"",
 		"")
+
 	dto := staticPersistence.NewPageDto(
 		"titleValue",
 		"descriptionValue",
@@ -156,7 +157,7 @@ func getPage(time string) *page {
 		[]string{},
 		[]staticIntf.Image{img})
 
-	return NewPage(dto, "testDomain", nil)
+	return NewPage(dto, nil)
 }
 
 type mockedComponent struct {
