@@ -169,7 +169,8 @@ func getPage(time string) *page {
 		"imageUrlValue",
 		"7",
 		"8",
-		"9")
+		"9",
+		"10")
 
 	dto := staticPersistence.NewPageDto(
 		"titleValue",
