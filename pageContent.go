@@ -3,6 +3,7 @@ package staticModel
 import (
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/ingmardrewing/htmlDoc"
@@ -35,6 +36,15 @@ func (p pageContent) ThumbBase64() string { return p.thumbBase64 }
 func (p pageContent) DisqusId() string { return p.disqusId }
 
 func (p pageContent) Content() string { return p.content }
+
+func (p pageContent) BodyText() string {
+	// ToDo: Fix this in the dto and persisted data
+	// we need the text in a separate field
+	parts := strings.Split(p.content, "</a>")
+	partsLessFirstLinkedImage := parts[1:len(parts)]
+	contentWithoutImage := strings.Join(partsLessFirstLinkedImage, "</a>")
+	return contentWithoutImage
+}
 
 func (p pageContent) Description() string { return p.description }
 

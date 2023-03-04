@@ -157,15 +157,20 @@ func getPage(time string) *page {
 		"homeText",
 		"homeHeadline",
 		"svgLogo")
+
 	img := staticPersistence.NewImageDto(
 		"titleValue",
-		"",
-		"",
-		"",
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+		"6",
 		"imageUrlValue",
-		"",
-		"",
-		"")
+		"7",
+		"8",
+		"9",
+		"10")
 
 	dto := staticPersistence.NewPageDto(
 		"titleValue",
